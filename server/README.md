@@ -62,7 +62,7 @@ hono: ^4.6.20
 See package.json for complete list.
 ```
 
-# env example
+# Env Variables
 
 ```
 APP_PORT=

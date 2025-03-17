@@ -1,50 +1,48 @@
-# React + TypeScript + Vite
+# LunchNSpecials
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This LunchNSpecials using Vite, React, TanStack Router, and TailwindCSS to quickly start a web project with an optimal developer experience.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Welcome to Lunch N Specials, your ultimate resource for finding the best lunch and drink specials near you! Whether you're craving a quick bite or looking for a spot to unwind with friends, we've got you covered with unbeatable deals.
 
-## Expanding the ESLint configuration
+## Env Variables.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Set up the following environment variables in the .env file to start the application.
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+VITE_API_URL= //API Endpoint URL
+VITE_MAP_KEY= //arcgis map api key
+VITE_FB_URL= //facebook page name or url
+VITE_IG_URL= //instagram page name or url
+VITE_MAIL= //email for contact.
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Development
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Installation
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+To install dependencies run:
+
+```
+npm install
+```
+
+Set up environment variables:
+
+- Fill in required environment variables
+
+- run the application locally, use the following command to start the application in development mode.
+
+```
+npm run dev
+```
+
+open http://localhost:3000
+
+### Dependencies
+
+Main dependencies:
+```
+See package.json for complete list.
 ```
