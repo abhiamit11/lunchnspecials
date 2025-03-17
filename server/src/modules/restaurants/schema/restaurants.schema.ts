@@ -1,0 +1,63 @@
+import { z } from "@hono/zod-openapi";
+import { ObjectId } from "mongodb";
+
+export const ParamsSchema = z.object({
+  id: z.string(z.instanceof(ObjectId)).min(3),
+});
+
+const coordinatesSchema = z.object({
+  latitude: z.string(),
+  longitude: z.string(),
+});
+
+const timingsSchema = z.object({
+  opening: z.string(),
+  closing: z.string(),
+});
+
+const menuSchema = z.object({
+  day: z.string(),
+  name: z.string(),
+  price: z.string(),
+  description: z.string(),
+  category: z.string().optional().default("lunch"),
+  timings: timingsSchema,
+});
+
+export const restaurantSchema = z.object({
+  name: z.string().min(1, "restaurant name is required"),
+  url: z.string().url().optional(),
+  description: z.string().optional(),
+  address: z.string().min(1, "restaurant address is required"),
+  zip: z.string().min(1),
+  coordinates: coordinatesSchema,
+  menu: z.array(menuSchema),
+  phone: z.string().optional(),
+  rating: z.string().optional(),
+});
+
+export const deleteManySchema = z.object({
+  ids: z.array(z.string()).min(1, "IDs required."),
+});
+
+export type restaurantType = z.infer<typeof restaurantSchema>;
+
+export const FileRequestSchema = z.object({
+  csv: z.custom<File>((v) => v instanceof File).openapi({}),
+});
+
+export const MapRestaurantSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+  address: z.string(),
+  category: z.string(),
+  coordinates: z.object({ latitude: z.string(), longitude: z.string() }),
+});
+
+export type MapRestaurant = {
+  _id: string;
+  name: string;
+  address: string;
+  category: "drink" | "lunch" | "both";
+  coordinates: { latitude: string; longitude: string };
+};

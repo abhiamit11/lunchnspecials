@@ -1,0 +1,56 @@
+name: lunchnspecials
+services:
+  client:
+    container_name: app_client
+    build:
+      context: ./client
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+     - "3001:80"
+    restart: unless-stopped
+    networks:
+      - lunchnspecials_network
+
+  admin:
+    container_name: app_admin
+    build:
+      context: ./admin
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+     - "3002:80"
+    restart: unless-stopped
+    networks:
+      - lunchnspecials_network
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: lunch_n_specials_db
+      MONGO_INITDB_DATABASE: LunchNSpecials
+    volumes:
+      - ./database/db:/data/db
+      - ./database/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    networks:
+      - lunchnspecials_network
+    ports:
+     - "27017:27017"
+
+  server:
+    container_name: apiserver
+    build:
+      context: ./server
+    ports:
+     - "5001:3000"
+    restart: unless-stopped
+    networks:
+      - lunchnspecials_network
+
+networks:
+  lunchnspecials_network:
+    name: lunchnspecials_network
+    driver: bridge
