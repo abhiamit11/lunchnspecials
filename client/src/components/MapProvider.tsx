@@ -9,10 +9,13 @@ import MapContext from './MapContext';
 import { useSearch } from '@tanstack/react-router';
 import useCoordinates from '@/hooks/useCoordinates';
 import Zoom from "@arcgis/core/widgets/Zoom.js";
+import { isEmpty } from 'lodash';
 
 export type CoordinatesParms = {
     x: number,
     y: number
+} & {
+    day?: string
 }
 
 const MapProvider = ({ children }: { children: ReactNode; }) => {
@@ -21,7 +24,7 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
     const [Mapview, setMapview] = useState<MapView>(new MapView())
     // const [graphicsLayer, setGraphicsLayer] = useState(new GraphicsLayer())
     const [loading, setLoading] = useState(false)
-    const { x, y }: CoordinatesParms = useSearch({ from: "/" })
+    const { x, y, day }: CoordinatesParms = useSearch({ from: "/" })
     const { setCoordinates } = useCoordinates()
     useEffect(() => {
         if (x == undefined && y == undefined) {
@@ -32,6 +35,16 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
 
         }
     }, [x, y])
+
+    useEffect(() => {
+        if (day && !isEmpty(Mapview.popup)) {
+            Mapview.popup.close()
+        }
+        return () => {
+
+        }
+    }, [day])
+
 
     const setLocation = useCallback((longitude: number, latitude: number) => {
         if (Mapview) {
@@ -94,6 +107,25 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
                         setLoading(false)
                     }, 500);
                 })
+
+                view.on("click", (event) => {
+                    // console.log('view click event', event)
+                    // console.log("allLayers", MapState.allLayers)
+                    const opts = {
+                        //     include: hurricanesLayer
+                    }
+                    view.hitTest(event, opts)
+                        .then((g: any) => {
+                            if (g.results.length > 0) {
+                                const graphic = g.results[0].graphic;
+                                // Check if the graphic has a popup associated with it
+                                if (!graphic.popupTemplate) {
+                                    // A popup will be shown if the user clicks on a feature with a popup template
+                                    console.log("Search this area button clicked feature.");
+                                }
+                            }
+                        });
+                });
 
                 return view
             })

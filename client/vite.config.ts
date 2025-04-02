@@ -19,11 +19,11 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
     port: 3000,
-    allowedHosts: ["demo.map.natrixsoftware.in"],
+    allowedHosts: ["local.test.natrixsoftware.in"],
   },
   preview: {
     host: "0.0.0.0",
     port: 3000,
-    allowedHosts: ["demo.map.natrixsoftware.in"],
+    allowedHosts: ["local.test.natrixsoftware.in"],
   },
 });

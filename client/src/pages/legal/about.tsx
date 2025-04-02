@@ -1,6 +1,11 @@
 import { Link } from "@tanstack/react-router"
+import { useEffect } from "react";
+import ReactGA from 'react-ga4';
 
 function About() {
+    useEffect(() => {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname, title: "About" });
+    }, []);
     return (
         <>
             <div className="flex justify-center items-center max-w-lg mx-auto mt-3 max-sm:px-6">

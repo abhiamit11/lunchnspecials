@@ -1,8 +1,14 @@
 import { IndividualRestaurant } from "@/lib/api"
 import { format } from "date-fns/format";
 import { parse } from "date-fns/parse";
-import { Check, Clipboard, Clock, Globe, MapPin, Navigation, Phone, Star } from "lucide-react";
+import { Check, Clipboard, Clock, Globe, MapPin, Martini, Navigation, Phone, Star, Utensils } from "lucide-react";
 import { useState } from "react";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface Props {
     data: IndividualRestaurant,
@@ -65,17 +71,35 @@ function MapPopupTemplate({ data, day }: Props) {
                                 <tr className="bg-white border dark:bg-gray-800 dark:border-gray-700 border-gray-200" key={`${item.name}_${item.category}_${item.day}_${index}`}>
                                     <th scope="row" className="p-1.5">
                                         <div className='grid grid-cols-1 gap-1'>
-                                            <div className="font-medium text-gray-900 text-wrap max-w-2xs text-base">
-                                                {item.name}
-                                                {item.description && <p className="truncate text-ellipsis max-h-6 max-w-3xs">{item.description}</p>}
+                                            <div className="flex justify-start items-start">
+                                                {item.category && (item.category == "drink" ? <Martini /> : <Utensils />)}
+                                                <div className="ml-2 font-medium text-gray-900 text-wrap max-w-2xs text-base">
+                                                    <p className="truncate text-wrap max-w-2xs">
+                                                        {item.name || item.description}
+                                                    </p>
+                                                    {(item.name && item.description) &&
+                                                        <div className="min-w-2xs w-full">
+                                                            <Accordion type="single" collapsible className="p-0 m-0">
+                                                                <AccordionItem value="item-1">
+                                                                    <AccordionTrigger className="p-0 m-0">
+                                                                        <span>Description</span>
+                                                                    </AccordionTrigger>
+                                                                    <AccordionContent>
+                                                                        <p className="truncate text-wrap max-w-2xs">{item.description}</p>
+                                                                    </AccordionContent>
+                                                                </AccordionItem>
+                                                            </Accordion>
+                                                        </div>
+                                                    }
+                                                </div>
                                             </div>
                                             <div className="text-gray-600 font-medium text-xs flex justify-start items-start gap-1">
-                                                <Clock className="h-3 w-3" />  <Timings timings={item.timings} />
+                                                <Timings timings={item.timings} />
                                             </div>
                                         </div>
                                     </th>
-                                    <td className="font-medium text-gray-900">
-                                        ${item.price}
+                                    <td className="font-medium p-1.5 text-gray-900 flex justify-start items-start">
+                                        {item.price && <div className=" h-full">${item.price}</div>}
                                     </td>
                                 </tr>
                             ))
@@ -128,11 +152,16 @@ export const Timings = ({ timings }: {
         const openingTime = parse(timings.opening, 'HH:mm', new Date());
         const closingTime = parse(timings.closing, 'HH:mm', new Date());
         return <>
-            {timings && <div className="flex justify-start items-center gap-1 w-fit">
-                <span>{format(openingTime, 'hh:mm a')}</span>
-                <span>to</span>
-                <span>{format(closingTime, 'hh:mm a')}</span>
-            </div>}
+            {timings &&
+                <>
+                    <Clock className="h-3 w-3" />
+                    <div className="flex justify-start items-center gap-1 w-fit">
+                        <span>{format(openingTime, 'hh:mm a')}</span>
+                        <span>to</span>
+                        <span>{format(closingTime, 'hh:mm a')}</span>
+                    </div>
+                </>
+            }
         </>
     }
 }

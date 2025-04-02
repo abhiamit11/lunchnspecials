@@ -13,6 +13,7 @@ import useMap from '@/hooks/useMap';
 import { MAP_KEY } from '@/constant';
 import useCoordinates from '@/hooks/useCoordinates';
 import axios from 'axios';
+import ReactGA from 'react-ga4';
 
 const LocationSearch = () => {
     const [address, setAddress] = useState('');
@@ -99,7 +100,12 @@ const LocationSearch = () => {
         };
     });
 
-    const onGoToLocation = async (value: any) => {
+    const onGoToLocation = async (value: string) => {
+        ReactGA.event({
+            category: 'engagement',
+            action: 'Location_engagement',
+            label: value
+        });
         const { x, y } = await handleSearch(value)
         setLocation(x, y)
         setCoordinates(x, y)

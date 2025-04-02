@@ -1,6 +1,11 @@
 import { Link } from "@tanstack/react-router"
+import { useEffect } from "react";
+import ReactGA from 'react-ga4';
 
 function TermsConditions() {
+    useEffect(() => {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname, title: "Terms and Conditions" });
+    }, []);
     return (
         <div className="container mx-auto">
             <div className="flex justify-center items-center max-w-lg mx-auto mt-3 max-sm:px-6">

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { format } from "date-fns/format"
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import ReactGA from 'react-ga4';
 
 function DaySelect() {
     const navigate = useNavigate({ from: '/' })
@@ -41,6 +42,11 @@ function DaySelect() {
     ];
     const onDayChange = (day: string) => {
         setSelectedDay(day)
+        ReactGA.event({
+            category: 'engagement',
+            action: 'day_engagement',
+            label: day
+        });
         navigate({
             search: (prev) => ({
                 ...prev,

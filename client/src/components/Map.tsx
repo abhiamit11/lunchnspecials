@@ -12,6 +12,7 @@ import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import CustomContent from "@arcgis/core/popup/content/CustomContent.js";
 import { createRoot } from "react-dom/client";
 import MapPopupTemplate from "./MapPopupTemplate";
+import ReactGA from 'react-ga4';
 
 const lunchMarker: Pick<__esri.PictureMarkerSymbol, 'type' | 'url' | 'width' | 'height'> = {
     type: "picture-marker",
@@ -36,6 +37,9 @@ const bothMarker: Pick<__esri.PictureMarkerSymbol, 'type' | 'url' | 'width' | 'h
 
 const layerId = 'restaurantsLocationLayer'
 function Map() {
+    useEffect(() => {
+        ReactGA.send({ hitType: "pageview", page: window.location.pathname });
+    }, []);
     const { doseLayerExist, addGraphicsLayer } = useMap()
     const { x, y, day }: CoordinatesParms & { day: string } = useSearch({ from: "/" })
     const { data, isSuccess } = useQuery({
@@ -68,6 +72,7 @@ function Map() {
 
         const popupTemplate = {
             title: name,
+            outFields: ["*"],
             content: [
                 new CustomContent({
                     outFields: ['*'],
@@ -75,7 +80,11 @@ function Map() {
                         const div = document.createElement('div');
                         if (event) {
                             const res = await getRestaurant(_id, day)
-
+                            ReactGA.event({
+                                category: 'engagement',
+                                action: 'restaurant_engagement',
+                                label: res.data.name
+                            });
                             const root = createRoot(div);
                             root.render(<MapPopupTemplate data={res.data} day={day} />);
                         }

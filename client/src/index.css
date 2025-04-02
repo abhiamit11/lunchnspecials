@@ -102,4 +102,7 @@
   .esri-component.esri-zoom.esri-widget {
     @apply bottom-14 right-4.5;
   }
+  .esri-popup__main-container.esri-widget.esri-popup--shadow {
+    margin-top: 80px;
+  }
 }
