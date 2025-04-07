@@ -1,12 +1,6 @@
-import { KeyRound, LucideProps, } from "lucide-react"
+import { KeyRound } from "lucide-react"
 import ChangePassword from "./change-password"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import SettingCard from "@/components/setting-card"
 
 function Settings() {
     return (
@@ -44,28 +38,3 @@ function Settings() {
 }
 
 export default Settings
-
-type SettingCardProps = {
-    icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>
-    title?: string
-    description?: string
-    children: React.ReactNode
-}
-const SettingCard = ({ title, description, icon: Icon, children }: SettingCardProps) => {
-    return (
-        <Card>
-            <CardHeader>
-                <CardTitle>
-                    <div className="flex justify-start items-center gap-2">
-                        <Icon />
-                        {title!}
-                    </div>
-                </CardTitle>
-                <CardDescription className="truncate">{description!}</CardDescription>
-            </CardHeader>
-            <CardContent>
-                {children}
-            </CardContent>
-        </Card>
-    )
-}

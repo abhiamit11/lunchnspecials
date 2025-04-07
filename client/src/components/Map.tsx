@@ -46,8 +46,7 @@ function Map() {
         queryKey: ['restaurants', [x, y, day]],
         queryFn: () => getRestaurants(x, y, 25, day),
         refetchOnWindowFocus: false
-    },
-    )
+    })
 
     const symbolSwitch = (category: "drink" | "lunch" | "both") => {
         switch (category) {

@@ -24,11 +24,26 @@ const AuthLoginLazyImport = createFileRoute('/_auth/login')()
 const DashboardRestaurantsIndexLazyImport = createFileRoute(
   '/_dashboard/restaurants/',
 )()
+const DashboardLegalPagesIndexLazyImport = createFileRoute(
+  '/_dashboard/legal-pages/',
+)()
 const DashboardRestaurantsImportLazyImport = createFileRoute(
   '/_dashboard/restaurants/import',
 )()
 const DashboardRestaurantsAddLazyImport = createFileRoute(
   '/_dashboard/restaurants/add',
+)()
+const DashboardLegalPagesTermsConditionsLazyImport = createFileRoute(
+  '/_dashboard/legal-pages/terms-conditions',
+)()
+const DashboardLegalPagesPrivacyPolicyLazyImport = createFileRoute(
+  '/_dashboard/legal-pages/privacy-policy',
+)()
+const DashboardLegalPagesCookiesPolicyLazyImport = createFileRoute(
+  '/_dashboard/legal-pages/cookies-policy',
+)()
+const DashboardLegalPagesAboutUsLazyImport = createFileRoute(
+  '/_dashboard/legal-pages/about-us',
 )()
 const DashboardRestaurantsEditIdLazyImport = createFileRoute(
   '/_dashboard/restaurants/edit/$id',
@@ -77,6 +92,15 @@ const DashboardRestaurantsIndexLazyRoute =
     import('./routes/_dashboard/restaurants/index.lazy').then((d) => d.Route),
   )
 
+const DashboardLegalPagesIndexLazyRoute =
+  DashboardLegalPagesIndexLazyImport.update({
+    id: '/legal-pages/',
+    path: '/legal-pages/',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/legal-pages/index.lazy').then((d) => d.Route),
+  )
+
 const DashboardRestaurantsImportLazyRoute =
   DashboardRestaurantsImportLazyImport.update({
     id: '/restaurants/import',
@@ -93,6 +117,50 @@ const DashboardRestaurantsAddLazyRoute =
     getParentRoute: () => DashboardRoute,
   } as any).lazy(() =>
     import('./routes/_dashboard/restaurants/add.lazy').then((d) => d.Route),
+  )
+
+const DashboardLegalPagesTermsConditionsLazyRoute =
+  DashboardLegalPagesTermsConditionsLazyImport.update({
+    id: '/legal-pages/terms-conditions',
+    path: '/legal-pages/terms-conditions',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/legal-pages/terms-conditions.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardLegalPagesPrivacyPolicyLazyRoute =
+  DashboardLegalPagesPrivacyPolicyLazyImport.update({
+    id: '/legal-pages/privacy-policy',
+    path: '/legal-pages/privacy-policy',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/legal-pages/privacy-policy.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardLegalPagesCookiesPolicyLazyRoute =
+  DashboardLegalPagesCookiesPolicyLazyImport.update({
+    id: '/legal-pages/cookies-policy',
+    path: '/legal-pages/cookies-policy',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/legal-pages/cookies-policy.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const DashboardLegalPagesAboutUsLazyRoute =
+  DashboardLegalPagesAboutUsLazyImport.update({
+    id: '/legal-pages/about-us',
+    path: '/legal-pages/about-us',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/legal-pages/about-us.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 const DashboardRestaurantsEditIdLazyRoute =
@@ -145,6 +213,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexLazyImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/legal-pages/about-us': {
+      id: '/_dashboard/legal-pages/about-us'
+      path: '/legal-pages/about-us'
+      fullPath: '/legal-pages/about-us'
+      preLoaderRoute: typeof DashboardLegalPagesAboutUsLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/legal-pages/cookies-policy': {
+      id: '/_dashboard/legal-pages/cookies-policy'
+      path: '/legal-pages/cookies-policy'
+      fullPath: '/legal-pages/cookies-policy'
+      preLoaderRoute: typeof DashboardLegalPagesCookiesPolicyLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/legal-pages/privacy-policy': {
+      id: '/_dashboard/legal-pages/privacy-policy'
+      path: '/legal-pages/privacy-policy'
+      fullPath: '/legal-pages/privacy-policy'
+      preLoaderRoute: typeof DashboardLegalPagesPrivacyPolicyLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/legal-pages/terms-conditions': {
+      id: '/_dashboard/legal-pages/terms-conditions'
+      path: '/legal-pages/terms-conditions'
+      fullPath: '/legal-pages/terms-conditions'
+      preLoaderRoute: typeof DashboardLegalPagesTermsConditionsLazyImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/restaurants/add': {
       id: '/_dashboard/restaurants/add'
       path: '/restaurants/add'
@@ -157,6 +253,13 @@ declare module '@tanstack/react-router' {
       path: '/restaurants/import'
       fullPath: '/restaurants/import'
       preLoaderRoute: typeof DashboardRestaurantsImportLazyImport
+      parentRoute: typeof DashboardImport
+    }
+    '/_dashboard/legal-pages/': {
+      id: '/_dashboard/legal-pages/'
+      path: '/legal-pages'
+      fullPath: '/legal-pages'
+      preLoaderRoute: typeof DashboardLegalPagesIndexLazyImport
       parentRoute: typeof DashboardImport
     }
     '/_dashboard/restaurants/': {
@@ -191,8 +294,13 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 interface DashboardRouteChildren {
   DashboardSettingsLazyRoute: typeof DashboardSettingsLazyRoute
   DashboardIndexLazyRoute: typeof DashboardIndexLazyRoute
+  DashboardLegalPagesAboutUsLazyRoute: typeof DashboardLegalPagesAboutUsLazyRoute
+  DashboardLegalPagesCookiesPolicyLazyRoute: typeof DashboardLegalPagesCookiesPolicyLazyRoute
+  DashboardLegalPagesPrivacyPolicyLazyRoute: typeof DashboardLegalPagesPrivacyPolicyLazyRoute
+  DashboardLegalPagesTermsConditionsLazyRoute: typeof DashboardLegalPagesTermsConditionsLazyRoute
   DashboardRestaurantsAddLazyRoute: typeof DashboardRestaurantsAddLazyRoute
   DashboardRestaurantsImportLazyRoute: typeof DashboardRestaurantsImportLazyRoute
+  DashboardLegalPagesIndexLazyRoute: typeof DashboardLegalPagesIndexLazyRoute
   DashboardRestaurantsIndexLazyRoute: typeof DashboardRestaurantsIndexLazyRoute
   DashboardRestaurantsEditIdLazyRoute: typeof DashboardRestaurantsEditIdLazyRoute
 }
@@ -200,8 +308,16 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardSettingsLazyRoute: DashboardSettingsLazyRoute,
   DashboardIndexLazyRoute: DashboardIndexLazyRoute,
+  DashboardLegalPagesAboutUsLazyRoute: DashboardLegalPagesAboutUsLazyRoute,
+  DashboardLegalPagesCookiesPolicyLazyRoute:
+    DashboardLegalPagesCookiesPolicyLazyRoute,
+  DashboardLegalPagesPrivacyPolicyLazyRoute:
+    DashboardLegalPagesPrivacyPolicyLazyRoute,
+  DashboardLegalPagesTermsConditionsLazyRoute:
+    DashboardLegalPagesTermsConditionsLazyRoute,
   DashboardRestaurantsAddLazyRoute: DashboardRestaurantsAddLazyRoute,
   DashboardRestaurantsImportLazyRoute: DashboardRestaurantsImportLazyRoute,
+  DashboardLegalPagesIndexLazyRoute: DashboardLegalPagesIndexLazyRoute,
   DashboardRestaurantsIndexLazyRoute: DashboardRestaurantsIndexLazyRoute,
   DashboardRestaurantsEditIdLazyRoute: DashboardRestaurantsEditIdLazyRoute,
 }
@@ -215,8 +331,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginLazyRoute
   '/settings': typeof DashboardSettingsLazyRoute
   '/': typeof DashboardIndexLazyRoute
+  '/legal-pages/about-us': typeof DashboardLegalPagesAboutUsLazyRoute
+  '/legal-pages/cookies-policy': typeof DashboardLegalPagesCookiesPolicyLazyRoute
+  '/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
+  '/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
   '/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
+  '/legal-pages': typeof DashboardLegalPagesIndexLazyRoute
   '/restaurants': typeof DashboardRestaurantsIndexLazyRoute
   '/restaurants/edit/$id': typeof DashboardRestaurantsEditIdLazyRoute
 }
@@ -226,8 +347,13 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginLazyRoute
   '/settings': typeof DashboardSettingsLazyRoute
   '/': typeof DashboardIndexLazyRoute
+  '/legal-pages/about-us': typeof DashboardLegalPagesAboutUsLazyRoute
+  '/legal-pages/cookies-policy': typeof DashboardLegalPagesCookiesPolicyLazyRoute
+  '/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
+  '/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
   '/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
+  '/legal-pages': typeof DashboardLegalPagesIndexLazyRoute
   '/restaurants': typeof DashboardRestaurantsIndexLazyRoute
   '/restaurants/edit/$id': typeof DashboardRestaurantsEditIdLazyRoute
 }
@@ -239,8 +365,13 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginLazyRoute
   '/_dashboard/settings': typeof DashboardSettingsLazyRoute
   '/_dashboard/': typeof DashboardIndexLazyRoute
+  '/_dashboard/legal-pages/about-us': typeof DashboardLegalPagesAboutUsLazyRoute
+  '/_dashboard/legal-pages/cookies-policy': typeof DashboardLegalPagesCookiesPolicyLazyRoute
+  '/_dashboard/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
+  '/_dashboard/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/_dashboard/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
   '/_dashboard/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
+  '/_dashboard/legal-pages/': typeof DashboardLegalPagesIndexLazyRoute
   '/_dashboard/restaurants/': typeof DashboardRestaurantsIndexLazyRoute
   '/_dashboard/restaurants/edit/$id': typeof DashboardRestaurantsEditIdLazyRoute
 }
@@ -252,8 +383,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/settings'
     | '/'
+    | '/legal-pages/about-us'
+    | '/legal-pages/cookies-policy'
+    | '/legal-pages/privacy-policy'
+    | '/legal-pages/terms-conditions'
     | '/restaurants/add'
     | '/restaurants/import'
+    | '/legal-pages'
     | '/restaurants'
     | '/restaurants/edit/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -262,8 +398,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/settings'
     | '/'
+    | '/legal-pages/about-us'
+    | '/legal-pages/cookies-policy'
+    | '/legal-pages/privacy-policy'
+    | '/legal-pages/terms-conditions'
     | '/restaurants/add'
     | '/restaurants/import'
+    | '/legal-pages'
     | '/restaurants'
     | '/restaurants/edit/$id'
   id:
@@ -273,8 +414,13 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_dashboard/settings'
     | '/_dashboard/'
+    | '/_dashboard/legal-pages/about-us'
+    | '/_dashboard/legal-pages/cookies-policy'
+    | '/_dashboard/legal-pages/privacy-policy'
+    | '/_dashboard/legal-pages/terms-conditions'
     | '/_dashboard/restaurants/add'
     | '/_dashboard/restaurants/import'
+    | '/_dashboard/legal-pages/'
     | '/_dashboard/restaurants/'
     | '/_dashboard/restaurants/edit/$id'
   fileRoutesById: FileRoutesById
@@ -315,8 +461,13 @@ export const routeTree = rootRoute
       "children": [
         "/_dashboard/settings",
         "/_dashboard/",
+        "/_dashboard/legal-pages/about-us",
+        "/_dashboard/legal-pages/cookies-policy",
+        "/_dashboard/legal-pages/privacy-policy",
+        "/_dashboard/legal-pages/terms-conditions",
         "/_dashboard/restaurants/add",
         "/_dashboard/restaurants/import",
+        "/_dashboard/legal-pages/",
         "/_dashboard/restaurants/",
         "/_dashboard/restaurants/edit/$id"
       ]
@@ -333,12 +484,32 @@ export const routeTree = rootRoute
       "filePath": "_dashboard/index.lazy.tsx",
       "parent": "/_dashboard"
     },
+    "/_dashboard/legal-pages/about-us": {
+      "filePath": "_dashboard/legal-pages/about-us.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/legal-pages/cookies-policy": {
+      "filePath": "_dashboard/legal-pages/cookies-policy.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/legal-pages/privacy-policy": {
+      "filePath": "_dashboard/legal-pages/privacy-policy.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/legal-pages/terms-conditions": {
+      "filePath": "_dashboard/legal-pages/terms-conditions.lazy.tsx",
+      "parent": "/_dashboard"
+    },
     "/_dashboard/restaurants/add": {
       "filePath": "_dashboard/restaurants/add.lazy.tsx",
       "parent": "/_dashboard"
     },
     "/_dashboard/restaurants/import": {
       "filePath": "_dashboard/restaurants/import.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/legal-pages/": {
+      "filePath": "_dashboard/legal-pages/index.lazy.tsx",
       "parent": "/_dashboard"
     },
     "/_dashboard/restaurants/": {

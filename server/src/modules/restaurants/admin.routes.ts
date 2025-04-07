@@ -14,6 +14,8 @@ import deleteManyRestaurant from "./routes/delete.many";
 import deleteManyRestaurantAction from "./controller/delete.many.controller";
 import exportManyRestaurant from "./routes/get.export";
 import exportManyRestaurantAction from "./controller/get.export.controller";
+import getDuplicatesRoute from "./routes/get.duplicates";
+import getDuplicatesAction from "./controller/get.duplicates.controller";
 
 const restaurantsForAdmin = new OpenAPIHono();
 
@@ -24,5 +26,6 @@ restaurantsForAdmin.openapi(importRestaurants, postImportAction);
 restaurantsForAdmin.openapi(getImportHistroy, getImportHistroyAction);
 restaurantsForAdmin.openapi(deleteManyRestaurant, deleteManyRestaurantAction);
 restaurantsForAdmin.openapi(exportManyRestaurant, exportManyRestaurantAction);
+restaurantsForAdmin.openapi(getDuplicatesRoute, getDuplicatesAction);
 
 export default restaurantsForAdmin;

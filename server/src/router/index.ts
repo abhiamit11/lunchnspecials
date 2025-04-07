@@ -4,6 +4,7 @@ import auth from "../modules/auth";
 import jwtMiddleware from "../middleware/jwt";
 import { HTTPException } from "hono/http-exception";
 import analyticsRoute from "../modules/analytics";
+import legalContentRoute from "../modules/legal-content";
 
 const app = new OpenAPIHono();
 
@@ -34,6 +35,7 @@ app.onError((err, c) => {
 // Add the route here that requires authorization.
 app.route("/", restaurants);
 app.route("/", analyticsRoute);
+app.route("/", legalContentRoute);
 
 const router = app;
 export default router;

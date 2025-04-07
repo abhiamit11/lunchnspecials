@@ -15,7 +15,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { Link, useRouterState } from "@tanstack/react-router"
-import { LayoutDashboard, LogOut, Settings, Utensils } from "lucide-react";
+import { LayoutDashboard, LogOut, Scale, Settings, Utensils } from "lucide-react";
 import useAuth from "@/hooks/use-auth";
 
 // This is sample data.
@@ -29,6 +29,11 @@ const items = [
         title: "Restaurants",
         url: "/restaurants",
         icon: Utensils
+    },
+    {
+        title: "Legal Pages",
+        url: "/legal-pages",
+        icon: Scale
     },
     {
         title: "settings",

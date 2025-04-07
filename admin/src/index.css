@@ -80,8 +80,41 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
+  /* .ql-toolbar.ql-snow {
+    border-bottom: 1px solid var(--border) !important;
+    background-color: var(--muted) !important;
+  } */
 }
 
 .input-error {
   @apply bg-destructive/10 border-destructive;
+}
+
+.revert-tailwind {
+  all: initial;
+}
+
+.revert-tailwind > * {
+  all: revert;
+}
+
+.ql-container.ql-snow {
+  @apply dark:border-0;
+}
+
+.ql-snow {
+  .ql-editor {
+    min-height: 650px;
+  }
+  .ql-picker {
+    &.ql-size {
+      .ql-picker-label,
+      .ql-picker-item {
+        &::before {
+          content: attr(data-value) !important;
+        }
+      }
+    }
+  }
 }
