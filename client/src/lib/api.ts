@@ -59,3 +59,11 @@ export async function getRestaurant(
     .get(`/restaurants/special/${id}${query}`)
     .then((response) => response.data);
 }
+
+export type socialLinksResponse = {
+  socialLinks: { facebook: string; instagram: string; email: string };
+};
+
+export async function getSocialLinks(): Promise<socialLinksResponse> {
+  return axios.get(`/cms/social-links`).then((response) => response.data);
+}

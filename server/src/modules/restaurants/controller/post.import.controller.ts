@@ -262,7 +262,6 @@ async function bulkInsertCSV(filePath: string): Promise<resType> {
       })
       .on("data", (x: { [key: string]: string }) => data.push(x))
       .on("end", async () => {
-        console.log("end");
         try {
           const res = await processedData(data);
           resolve(res);

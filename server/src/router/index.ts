@@ -5,6 +5,7 @@ import jwtMiddleware from "../middleware/jwt";
 import { HTTPException } from "hono/http-exception";
 import analyticsRoute from "../modules/analytics";
 import legalContentRoute from "../modules/legal-content";
+import settingsRoute from "../modules/misc";
 
 const app = new OpenAPIHono();
 
@@ -36,6 +37,7 @@ app.onError((err, c) => {
 app.route("/", restaurants);
 app.route("/", analyticsRoute);
 app.route("/", legalContentRoute);
+app.route("/", settingsRoute);
 
 const router = app;
 export default router;

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { columns } from "./table/columns"
 import { DataTable } from "./table/data-table"
-import { FileUp, Plus } from "lucide-react";
+import { Copy, FileUp, Plus } from "lucide-react";
 import { Link, useSearch } from "@tanstack/react-router";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getRestaurants } from "./api";
@@ -31,6 +31,21 @@ function Restaurants() {
                     <h1 className="text-2xl font-medium">Restaurants</h1>
 
                     <div className="flex justify-end items-center gap-2">
+
+                        <TooltipProvider delayDuration={200}>
+                            <Tooltip data-side="bottom">
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" asChild>
+                                        <Link to="/restaurants/duplicates">
+                                            <Copy /> Duplicates
+                                        </Link>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-sm" side="bottom">
+                                    <p>The function allows you to find and delete duplicate restaurant data in the system.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
 
                         <TooltipProvider delayDuration={200}>
                             <Tooltip data-side="bottom">

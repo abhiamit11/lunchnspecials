@@ -20,7 +20,12 @@ const getDuplicatesAction: RouteHandler<typeof getDuplicatesRoute> = async (
           $group: {
             _id: { name: "$name", location: "$location" },
             docs: {
-              $push: { _id: "$_id", name: "$name", updatedAt: "$updatedAt" },
+              $push: {
+                _id: "$_id",
+                name: "$name",
+                updatedAt: "$updatedAt",
+                address: "$address",
+              },
             },
             count: { $sum: 1 },
           },
@@ -33,18 +38,22 @@ const getDuplicatesAction: RouteHandler<typeof getDuplicatesRoute> = async (
       ])
       .toArray();
 
-    // Step 2: Use the results to find the actual duplicate documents
-    // let duplicateDocs = duplicates.map((doc) => {
-    //   console.log("doc", doc.docs[0]);
-    //   return doc._id;
-    // });
-
-    // console.log("duplicateDocs", duplicateDocs);
+    const duplicateRestaurants: any[] = [];
+    let total = 0;
+    duplicates.forEach((element) => {
+      const count = element.count - 1;
+      total = total + count;
+      duplicateRestaurants.push({
+        name: element.docs[0].name,
+        address: element.docs[0].address,
+        count,
+      });
+    });
 
     return c.json(
       {
-        total: 0,
-        data: duplicates,
+        total,
+        data: duplicateRestaurants,
       },
       200
     );

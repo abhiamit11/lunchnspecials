@@ -7,7 +7,7 @@ const tags = ["Admin Restaurants"];
 const getDuplicatesRoute = createRoute({
   tags: tags,
   summary: "Get Duplicates Restaurants",
-  description: "Retrieves a import histroy.",
+  description: "Retrieves a list of Duplicates Restaurants.",
   method: "get",
   path: "/duplicates",
   request: {},
@@ -21,7 +21,7 @@ const getDuplicatesRoute = createRoute({
           }),
         },
       },
-      description: "Retrieve all available Restaurants.",
+      description: "",
     },
     400: ErrorResponse,
   },

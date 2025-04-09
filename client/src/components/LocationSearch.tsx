@@ -114,9 +114,9 @@ const LocationSearch = () => {
     }
 
     return (
-        <div className='max-w-md w-full col-span-2 px-2 md:px-0 drop-shadow-sm'>
+        <div className='max-w-md w-full col-span-2 md:px-0 drop-shadow-sm'>
             <Command className='w-full border relative overflow-visible'>
-                <CommandInput placeholder="Search..." value={address} onValueChange={handleInputChange} />
+                <CommandInput placeholder="Type Address or Zip Code to Search for Specials.." value={address} onValueChange={handleInputChange} />
                 <CommandList className='max-sm:absolute bg-white max-w-md w-full top-[36px] rounded-b-md left-0 z-10'>
                     {loading && address && <CommandLoading className='text-center py-1'>Hang on…</CommandLoading>}
                     {(Array.isArray(result) && result.length > 0) &&

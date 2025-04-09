@@ -30,6 +30,9 @@ const DashboardLegalPagesIndexLazyImport = createFileRoute(
 const DashboardRestaurantsImportLazyImport = createFileRoute(
   '/_dashboard/restaurants/import',
 )()
+const DashboardRestaurantsDuplicatesLazyImport = createFileRoute(
+  '/_dashboard/restaurants/duplicates',
+)()
 const DashboardRestaurantsAddLazyImport = createFileRoute(
   '/_dashboard/restaurants/add',
 )()
@@ -108,6 +111,17 @@ const DashboardRestaurantsImportLazyRoute =
     getParentRoute: () => DashboardRoute,
   } as any).lazy(() =>
     import('./routes/_dashboard/restaurants/import.lazy').then((d) => d.Route),
+  )
+
+const DashboardRestaurantsDuplicatesLazyRoute =
+  DashboardRestaurantsDuplicatesLazyImport.update({
+    id: '/restaurants/duplicates',
+    path: '/restaurants/duplicates',
+    getParentRoute: () => DashboardRoute,
+  } as any).lazy(() =>
+    import('./routes/_dashboard/restaurants/duplicates.lazy').then(
+      (d) => d.Route,
+    ),
   )
 
 const DashboardRestaurantsAddLazyRoute =
@@ -248,6 +262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRestaurantsAddLazyImport
       parentRoute: typeof DashboardImport
     }
+    '/_dashboard/restaurants/duplicates': {
+      id: '/_dashboard/restaurants/duplicates'
+      path: '/restaurants/duplicates'
+      fullPath: '/restaurants/duplicates'
+      preLoaderRoute: typeof DashboardRestaurantsDuplicatesLazyImport
+      parentRoute: typeof DashboardImport
+    }
     '/_dashboard/restaurants/import': {
       id: '/_dashboard/restaurants/import'
       path: '/restaurants/import'
@@ -299,6 +320,7 @@ interface DashboardRouteChildren {
   DashboardLegalPagesPrivacyPolicyLazyRoute: typeof DashboardLegalPagesPrivacyPolicyLazyRoute
   DashboardLegalPagesTermsConditionsLazyRoute: typeof DashboardLegalPagesTermsConditionsLazyRoute
   DashboardRestaurantsAddLazyRoute: typeof DashboardRestaurantsAddLazyRoute
+  DashboardRestaurantsDuplicatesLazyRoute: typeof DashboardRestaurantsDuplicatesLazyRoute
   DashboardRestaurantsImportLazyRoute: typeof DashboardRestaurantsImportLazyRoute
   DashboardLegalPagesIndexLazyRoute: typeof DashboardLegalPagesIndexLazyRoute
   DashboardRestaurantsIndexLazyRoute: typeof DashboardRestaurantsIndexLazyRoute
@@ -316,6 +338,8 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardLegalPagesTermsConditionsLazyRoute:
     DashboardLegalPagesTermsConditionsLazyRoute,
   DashboardRestaurantsAddLazyRoute: DashboardRestaurantsAddLazyRoute,
+  DashboardRestaurantsDuplicatesLazyRoute:
+    DashboardRestaurantsDuplicatesLazyRoute,
   DashboardRestaurantsImportLazyRoute: DashboardRestaurantsImportLazyRoute,
   DashboardLegalPagesIndexLazyRoute: DashboardLegalPagesIndexLazyRoute,
   DashboardRestaurantsIndexLazyRoute: DashboardRestaurantsIndexLazyRoute,
@@ -336,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
   '/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
+  '/restaurants/duplicates': typeof DashboardRestaurantsDuplicatesLazyRoute
   '/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
   '/legal-pages': typeof DashboardLegalPagesIndexLazyRoute
   '/restaurants': typeof DashboardRestaurantsIndexLazyRoute
@@ -352,6 +377,7 @@ export interface FileRoutesByTo {
   '/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
   '/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
+  '/restaurants/duplicates': typeof DashboardRestaurantsDuplicatesLazyRoute
   '/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
   '/legal-pages': typeof DashboardLegalPagesIndexLazyRoute
   '/restaurants': typeof DashboardRestaurantsIndexLazyRoute
@@ -370,6 +396,7 @@ export interface FileRoutesById {
   '/_dashboard/legal-pages/privacy-policy': typeof DashboardLegalPagesPrivacyPolicyLazyRoute
   '/_dashboard/legal-pages/terms-conditions': typeof DashboardLegalPagesTermsConditionsLazyRoute
   '/_dashboard/restaurants/add': typeof DashboardRestaurantsAddLazyRoute
+  '/_dashboard/restaurants/duplicates': typeof DashboardRestaurantsDuplicatesLazyRoute
   '/_dashboard/restaurants/import': typeof DashboardRestaurantsImportLazyRoute
   '/_dashboard/legal-pages/': typeof DashboardLegalPagesIndexLazyRoute
   '/_dashboard/restaurants/': typeof DashboardRestaurantsIndexLazyRoute
@@ -388,6 +415,7 @@ export interface FileRouteTypes {
     | '/legal-pages/privacy-policy'
     | '/legal-pages/terms-conditions'
     | '/restaurants/add'
+    | '/restaurants/duplicates'
     | '/restaurants/import'
     | '/legal-pages'
     | '/restaurants'
@@ -403,6 +431,7 @@ export interface FileRouteTypes {
     | '/legal-pages/privacy-policy'
     | '/legal-pages/terms-conditions'
     | '/restaurants/add'
+    | '/restaurants/duplicates'
     | '/restaurants/import'
     | '/legal-pages'
     | '/restaurants'
@@ -419,6 +448,7 @@ export interface FileRouteTypes {
     | '/_dashboard/legal-pages/privacy-policy'
     | '/_dashboard/legal-pages/terms-conditions'
     | '/_dashboard/restaurants/add'
+    | '/_dashboard/restaurants/duplicates'
     | '/_dashboard/restaurants/import'
     | '/_dashboard/legal-pages/'
     | '/_dashboard/restaurants/'
@@ -466,6 +496,7 @@ export const routeTree = rootRoute
         "/_dashboard/legal-pages/privacy-policy",
         "/_dashboard/legal-pages/terms-conditions",
         "/_dashboard/restaurants/add",
+        "/_dashboard/restaurants/duplicates",
         "/_dashboard/restaurants/import",
         "/_dashboard/legal-pages/",
         "/_dashboard/restaurants/",
@@ -502,6 +533,10 @@ export const routeTree = rootRoute
     },
     "/_dashboard/restaurants/add": {
       "filePath": "_dashboard/restaurants/add.lazy.tsx",
+      "parent": "/_dashboard"
+    },
+    "/_dashboard/restaurants/duplicates": {
+      "filePath": "_dashboard/restaurants/duplicates.lazy.tsx",
       "parent": "/_dashboard"
     },
     "/_dashboard/restaurants/import": {

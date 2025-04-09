@@ -10,6 +10,8 @@ import { useSearch } from '@tanstack/react-router';
 import useCoordinates from '@/hooks/useCoordinates';
 import Zoom from "@arcgis/core/widgets/Zoom.js";
 import { isEmpty } from 'lodash';
+import isWithinRadius from '@/lib/is-within-radius';
+import { useSearchAreaStore } from './SearchThisArea';
 
 export type CoordinatesParms = {
     x: number,
@@ -108,23 +110,8 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
                     }, 500);
                 })
 
-                view.on("click", (event) => {
-                    // console.log('view click event', event)
-                    // console.log("allLayers", MapState.allLayers)
-                    const opts = {
-                        //     include: hurricanesLayer
-                    }
-                    view.hitTest(event, opts)
-                        .then((g: any) => {
-                            if (g.results.length > 0) {
-                                const graphic = g.results[0].graphic;
-                                // Check if the graphic has a popup associated with it
-                                if (!graphic.popupTemplate) {
-                                    // A popup will be shown if the user clicks on a feature with a popup template
-                                    console.log("Search this area button clicked feature.");
-                                }
-                            }
-                        });
+                view.on("drag", (event) => {
+                    searchThisArea(event, view)
                 });
 
                 return view
@@ -134,6 +121,29 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
 
         }
     }, [MapState])
+
+    const { toggleButton, setPoints } = useSearchAreaStore((state) => state)
+    async function searchThisArea(event: __esri.ViewDragEvent, view: MapView) {
+        const opts = {};
+        view.hitTest(event, opts).then(() => {
+            const { latitude, longitude } = view.center;
+            const point1 = { longitude: x, latitude: y }
+            const point2 = { longitude, latitude }
+            const result = isWithinRadius(point1, point2, 15)
+            if (!result) {
+                toggleButton(true)
+                setPoints(point2)
+            } else {
+                toggleButton(false)
+            }
+        });
+    }
+
+    useCallback(
+        () => searchThisArea,
+        [x, y],
+    )
+
 
     useEffect(function initMap() {
         if (mapDiv.current) {
@@ -165,7 +175,7 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
     return <>
         <MapContext.Provider value={contextValue}>
             {children}
-            {loading && <div className='fixed top-0 left-0 w-full h-dvh bg-foreground/60 z-10 flex justify-center items-center'>
+            {loading && <div className='fixed top-0 left-0 w-full h-dvh bg-foreground/60 flex justify-center items-center z-20'>
                 <div role="status">
                     <svg aria-hidden="true" className="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
@@ -173,7 +183,6 @@ const MapProvider = ({ children }: { children: ReactNode; }) => {
                     </svg>
                     <span className="sr-only">Loading...</span>
                 </div>
-
             </div>}
             <div ref={mapDiv} className='w-full h-dvh' />
         </MapContext.Provider>

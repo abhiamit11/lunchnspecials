@@ -90,7 +90,7 @@ function FileUpload() {
         form.setValue("csv", e.dataTransfer.files); // Set the file to the state
 
     };
-    console.log('file', file)
+
     return (
         <>
             {/*  */}

@@ -55,7 +55,7 @@ function DaySelect() {
         })
     }
     return (
-        <div className="px-2 md:px-0 max-w-full md:max-w-[156px] w-full">
+        <div className="md:px-0 max-w-full md:max-w-[156px] w-full sm:w-[156px]">
             <Select onValueChange={onDayChange} defaultValue={selectedDay}>
                 <SelectTrigger className={cn("bg-background w-full h-[42px]")}>
                     <SelectValue placeholder="Day" />

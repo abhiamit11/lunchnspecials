@@ -44,7 +44,7 @@ function Map() {
     const { x, y, day }: CoordinatesParms & { day: string } = useSearch({ from: "/" })
     const { data, isSuccess } = useQuery({
         queryKey: ['restaurants', [x, y, day]],
-        queryFn: () => getRestaurants(x, y, 25, day),
+        queryFn: () => getRestaurants(x || 0, y || 0, 25, day),
         refetchOnWindowFocus: false
     })
 

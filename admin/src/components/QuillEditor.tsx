@@ -9,6 +9,13 @@ const Size: any = Quill.import('attributors/style/size');
 Size.whitelist = fontSizeArr;
 Quill.register(Size, true);
 
+const FontAttributor: any = Quill.import('attributors/class/font');
+const fontArr = [
+    'montserrat'
+];
+FontAttributor.whitelist = fontArr
+Quill.register(FontAttributor, true);
+
 const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -23,7 +30,7 @@ const toolbarOptions = [
     [{ size: fontSizeArr }],
 
     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    // [{ 'font': [] }],
+    [{ 'font': fontArr }],
     [{ 'align': [] }],
 
     ['clean']                                         // remove formatting button

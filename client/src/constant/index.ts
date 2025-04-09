@@ -8,3 +8,5 @@ export const FB_URL: string = env.VITE_FB_URL || "";
 export const IG_URL: string = env.VITE_IG_URL || "";
 export const MAIL: string = env.VITE_MAIL || "";
 export const GA_TAG: string = env.VITE_GA_TAG;
+
+export const LOGO_URL: string = API_URL + "cms/logo";

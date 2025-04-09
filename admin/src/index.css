@@ -108,6 +108,7 @@
     min-height: 650px;
   }
   .ql-picker {
+    &.ql-font,
     &.ql-size {
       .ql-picker-label,
       .ql-picker-item {

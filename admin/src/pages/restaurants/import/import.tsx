@@ -5,16 +5,23 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { CircleHelp } from "lucide-react"
+import { ChevronLeft, CircleHelp } from "lucide-react"
 import FileUpload from "./file-upload"
 import ImportHistroy from "./table"
+import { useNavigate } from "@tanstack/react-router"
 
 function Import() {
-
+    const navigate = useNavigate()
+    const goBack = () => {
+        navigate({ to: '/restaurants' })
+    }
     return (
         <>
-            <div className="flex justify-between items-center p-4 rounded-lg">
-                <h1 className="text-2xl font-medium">Import Restaurants</h1>
+            <div className="flex justify-between items-center py-4 rounded-lg">
+                <div className="flex justify-start items-center gap-2">
+                    <Button variant={'ghost'} size={'icon'} onClick={goBack}><ChevronLeft /></Button>
+                    <h1 className="text-2xl font-medium">Import Restaurants</h1>
+                </div>
                 <div className="flex justify-end items-center gap-2">
                     <TooltipProvider delayDuration={200}>
                         <Tooltip data-side="bottom">

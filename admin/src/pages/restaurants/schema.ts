@@ -6,8 +6,8 @@ const coordinatesSchema = z.object({
 });
 
 const timingsSchema = z.object({
-  opening: z.string().min(1, "Required."),
-  closing: z.string().min(1, "Required."),
+  opening: z.string(),
+  closing: z.string(),
 });
 
 export const menuItemSchema = z.object({
