@@ -12,11 +12,11 @@ const setTermsContentAction: RouteHandler<typeof setTermsContent> = async (
     const res = await legalPagesDb.find().sort("updatedAt").toArray();
     try {
       if (res.length == 0) {
-        const defualtData = {
+        const defualtData: LegalContentType = {
           termsConditionsHtml,
-          aboutHtml: "",
-          privacyHtml: "",
-          cookiesHtml: "",
+          aboutHtml: { content: "", isHtml: false },
+          privacyHtml: { content: "", isHtml: false },
+          cookiesHtml: { content: "", isHtml: false },
           updatedAt: new Date().toISOString(),
           creationAt: new Date().toISOString(),
         };

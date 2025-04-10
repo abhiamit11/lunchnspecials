@@ -10,11 +10,11 @@ const aboutPageAction: RouteHandler<typeof aboutPage> = async (c) => {
     const res = await legalPagesDb.find().sort("updatedAt").toArray();
     try {
       if (res.length == 0) {
-        const defualtData = {
+        const defualtData: LegalContentType = {
           aboutHtml,
-          privacyHtml: "",
-          termsConditionsHtml: "",
-          cookiesHtml: "",
+          privacyHtml: { content: "", isHtml: false },
+          termsConditionsHtml: { content: "", isHtml: false },
+          cookiesHtml: { content: "", isHtml: false },
           updatedAt: new Date().toISOString(),
           creationAt: new Date().toISOString(),
         };

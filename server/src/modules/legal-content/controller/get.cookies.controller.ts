@@ -9,12 +9,18 @@ const getCookiesAction: RouteHandler<typeof getAboutContent> = async (c) => {
     const res = await legalPagesDb.find().sort("updatedAt").toArray();
     try {
       if (res.length == 0) {
-        throw new Error("No content found.");
+        return c.json(
+          {
+            succeed: true,
+            data: { content: "", isHtml: false },
+          },
+          200
+        );
       }
       return c.json(
         {
           succeed: true,
-          content: res[0].cookiesHtml,
+          data: res[0].cookiesHtml,
         },
         200
       );

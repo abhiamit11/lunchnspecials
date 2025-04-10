@@ -23,7 +23,7 @@ function About() {
                     </div>
                     <h1 className="text-3xl font-bold text-center">Lunch N Specials</h1>
                     {isLoading && <Loader />}
-                    {isSuccess && <div className="revert-tailwind font-montserrat" dangerouslySetInnerHTML={{ __html: data.content || '' }} />}
+                    {isSuccess && <div className="revert-tailwind font-montserrat" dangerouslySetInnerHTML={{ __html: data.data?.content || '' }} />}
                 </div>
             </div>
         </>

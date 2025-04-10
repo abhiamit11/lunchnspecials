@@ -67,18 +67,18 @@ const QuillEditor = forwardRef(
             ref.current = quill;
 
             if (defaultValueRef.current) {
-                quill.setContents(defaultValueRef.current);
+                console.log('defaultValueRef.current', defaultValueRef.current)
+                quill.root.innerHTML = defaultValueRef.current
+                // quill.setContents(defaultValueRef.current);
             }
 
-            quill.on(Quill.events.TEXT_CHANGE, (...args) => {
-                onTextChangeRef.current?.(...args);
+            quill.on(Quill.events.TEXT_CHANGE, () => {
+                onTextChangeRef.current?.(quill.root.innerHTML);
             });
 
             quill.on(Quill.events.SELECTION_CHANGE, (...args) => {
                 onSelectionChangeRef.current?.(...args);
             });
-            const html = quill.getSemanticHTML(0, 10);
-            console.log('text', html)
 
             return () => {
                 ref.current = null;
@@ -99,7 +99,7 @@ export default QuillEditor;
 
 QuillEditor.propTypes = {
     readOnly: PropTypes.bool,
-    defaultValue: PropTypes.object,
+    defaultValue: PropTypes.string,
     onTextChange: PropTypes.func,
     onSelectionChange: PropTypes.func,
 };

@@ -14,7 +14,7 @@ const getTermsAction: RouteHandler<typeof getAboutContent> = async (c) => {
       return c.json(
         {
           succeed: true,
-          content: res[0].termsConditionsHtml,
+          data: res[0].termsConditionsHtml,
         },
         200
       );

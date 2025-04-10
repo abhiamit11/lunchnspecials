@@ -12,11 +12,11 @@ const setCookiesContentAction: RouteHandler<typeof setCookiesContent> = async (
     const res = await legalPagesDb.find().sort("updatedAt").toArray();
     try {
       if (res.length == 0) {
-        const defualtData = {
+        const defualtData: LegalContentType = {
           cookiesHtml,
-          termsConditionsHtml: "",
-          aboutHtml: "",
-          privacyHtml: "",
+          termsConditionsHtml: { content: "", isHtml: false },
+          aboutHtml: { content: "", isHtml: false },
+          privacyHtml: { content: "", isHtml: false },
           updatedAt: new Date().toISOString(),
           creationAt: new Date().toISOString(),
         };

@@ -2,59 +2,48 @@ import QuillEditor from "@/components/QuillEditor";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ChevronLeft, Eye, Save } from "lucide-react";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import { ChevronLeft, Code, Eye, EyeClosed, LetterText, Save } from "lucide-react";
 import Quill from "quill";
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from "react-hook-form";
-import { CookiesSchema, CookiesType } from "./schema";
-import { getCookiesContent, updateCookiesContent } from "./api";
 import { useNavigate } from "@tanstack/react-router";
+import { Toggle } from "@/components/ui/toggle";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
 
-const Delta = Quill.import('delta');
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { getCookiesContent, updateCookiesContent } from "./api";
+import { contentSchema, contentType } from "./schema";
 
 function CookiesPolicy() {
+    const form = useForm<contentType>({
+        resolver: zodResolver(contentSchema),
+        defaultValues: {
+            content: '',
+            isHtml: true
+        }
+    })
+
     const [_range, setRange] = useState();
     const [readOnly, _setReadOnly] = useState(false);
     // Use a ref to access the quill instance directly
     const quillRef = useRef<Quill | null>(null);
 
-    const { data, isSuccess, refetch } = useQuery({
-        queryKey: ["cookies-policy-content"], //Array according to Documentation
-        queryFn: getCookiesContent
+    const { data, isSuccess, refetch, isLoading, isFetched } = useQuery({
+        queryKey: ["cookies-content"], //Array according to Documentation
+        queryFn: getCookiesContent,
+        placeholderData: keepPreviousData
     })
-
-    useEffect(() => {
-        if (isSuccess) {
-            if (quillRef.current && quillRef.current.root) {
-                quillRef.current.root.innerHTML = data.content
-            }
-        }
-
-        return () => {
-
-        }
-    }, [isSuccess])
-
-
-    const form = useForm<CookiesType>({
-        resolver: zodResolver(CookiesSchema),
-        defaultValues: {
-            cookiesHtml: ''
-        }
-    })
-
-    const onTextChange = () => {
-        if (quillRef.current && quillRef.current.root) {
-            form.setValue('cookiesHtml', quillRef.current.root.innerHTML)
-        }
-    }
-    const [showPreview, setShowPreview] = useState(true)
-
-
-    const onSubmit = (data: CookiesType) => {
-        mutate(data)
-    }
 
     const { mutate } = useMutation({
         mutationFn: updateCookiesContent,
@@ -68,14 +57,78 @@ function CookiesPolicy() {
         },
     })
 
-    const value = form.watch("cookiesHtml") || data?.content || '';
+    const [value, setValue] = useState(form.watch('content'))
+
+    useEffect(() => {
+        if (isSuccess && isFetched) {
+            form.setValue('content', data.data.content)
+            form.setValue('isHtml', data.data.isHtml)
+            sethtmlOnly(data.data.isHtml)
+            if (!data.data.isHtml)
+                if (quillRef.current && quillRef.current.root) {
+                    quillRef.current.root.innerHTML = data.data.content
+                }
+        }
+        return () => {
+
+        }
+    }, [isSuccess, isFetched])
+
+    useEffect(() => {
+        setValue(form.watch('content'))
+        return () => {
+
+        }
+    }, [form.watch('content')])
+
+
+
+    const [showPreview, setShowPreview] = useState(true)
+
+
+    const onSubmit = (data: contentType) => {
+        mutate(data)
+    }
+
     const navigate = useNavigate()
     const goBack = () => {
         navigate({ to: '/legal-pages' })
     }
+    const [htmlOnly, sethtmlOnly] = useState(true)
 
+    const toggleHtmlOnly = () => {
+        if (form.getValues('content')) {
+            setOpenAlert(true)
+            return;
+        }
+        onAccept();
+    }
+
+    const onAccept = () => {
+        sethtmlOnly((x) => !x)
+        form.setValue('isHtml', !htmlOnly)
+        form.setValue('content', "")
+    }
+
+    const [openAlert, setOpenAlert] = useState(false)
     return (
         <>
+
+            <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="text-foreground">Format Change!</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. Your current content is in {htmlOnly ? 'HTML' : 'Text'} format. If you switch to {!htmlOnly ? 'HTML' : 'Text'} content, it will be lost, and if you press save, it will be saved as {!htmlOnly ? 'HTML' : 'Text'}. This may not display in the proper format.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="text-foreground">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={onAccept}>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <div className="flex justify-between items-center py-4 rounded-lg">
                 <div className="flex justify-start items-center gap-2">
                     <Button variant={'ghost'} size={'icon'} onClick={goBack}><ChevronLeft /></Button>
@@ -83,24 +136,51 @@ function CookiesPolicy() {
                 </div>
 
                 <div className="flex justify-end items-center gap-2">
-                    <Button onClick={() => setShowPreview(!showPreview)} variant={'ghost'}><Eye /> Preview </Button>
+                    <Toggle onPressedChange={toggleHtmlOnly} pressed={htmlOnly}>{
+                        htmlOnly ? <><Code /> HTML Format</> :
+                            <><LetterText /> Text Format </>
+                    }</Toggle>
+                    <Toggle onPressedChange={() => setShowPreview((x) => !x)} pressed={showPreview}>{showPreview ? <Eye /> : <EyeClosed />} Preview </Toggle>
                     <Button onClick={form.handleSubmit(onSubmit)}><Save /> Save </Button>
                 </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-                <div className={`${!showPreview ? 'col-span-2' : ''}`}>
-                    <QuillEditor
-                        ref={quillRef}
-                        readOnly={readOnly}
-                        defaultValue={new Delta().insert(data?.content || '')}
-                        onSelectionChange={setRange}
-                        onTextChange={onTextChange}
-                    />
-                </div>
+                {!isLoading && <>
+                    <Form {...form}>
+                        {htmlOnly ?
+                            <FormField
+                                control={form.control}
+                                name={'content'}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Textarea {...field} className='dark:bg-white/80 dark:text-black rounded-none min-h-[650px] h-full max-h-dvh' />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
 
-                {showPreview && <div className="text-foreground p-4 border dark:bg-white/80">
-                    <div className="revert-tailwind font-montserrat" dangerouslySetInnerHTML={{ __html: value }}></div>
+                            : <div className={`${!showPreview ? 'col-span-2' : ''}`}>
+                                <FormField
+                                    control={form.control}
+                                    name={'content'}
+                                    render={({ field }) => (
+                                        <QuillEditor
+                                            ref={quillRef}
+                                            readOnly={readOnly}
+                                            defaultValue={field.value}
+                                            onSelectionChange={setRange}
+                                            onTextChange={field.onChange}
+                                        />)}
+                                />
+                            </div>}
+                    </Form>
+                </>
+                }
+
+                {showPreview && <div className="p-4 border dark:bg-white/80 max-h-dvh overflow-auto">
+                    <div className="no-tailwind text-black" dangerouslySetInnerHTML={{ __html: value }}></div>
                 </div>}
 
             </div>

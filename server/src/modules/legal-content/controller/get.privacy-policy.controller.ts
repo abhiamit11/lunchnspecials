@@ -11,12 +11,18 @@ const getPrivacyPolicyContentAction: RouteHandler<
     const res = await legalPagesDb.find().sort("updatedAt").toArray();
     try {
       if (res.length == 0) {
-        throw new Error("No content found.");
+        return c.json(
+          {
+            succeed: true,
+            data: { content: "", isHtml: false },
+          },
+          200
+        );
       }
       return c.json(
         {
           succeed: true,
-          content: res[0].privacyHtml,
+          data: res[0].privacyHtml,
         },
         200
       );

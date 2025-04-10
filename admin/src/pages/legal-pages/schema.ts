@@ -4,17 +4,20 @@ export const AboutSchema = z.object({
   aboutHtml: z.string(),
 });
 
+export const contentSchema = z.object({
+  content: z.string(),
+  isHtml: z.boolean(),
+});
+
+export type contentType = z.infer<typeof contentSchema>;
+
 export type AboutType = {
   aboutHtml: string;
 };
 
-export const PrivacyPolicySchema = z.object({
-  privacyHtml: z.string(),
-});
+export const PrivacyPolicySchema = contentSchema;
 
-export type PrivacyPolicyType = {
-  privacyHtml: string;
-};
+export type PrivacyPolicyType = z.infer<typeof contentSchema>;
 
 export type TermsConditionsType = {
   termsConditionsHtml: string;

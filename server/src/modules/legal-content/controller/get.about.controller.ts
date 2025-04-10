@@ -16,7 +16,7 @@ const getAboutContentAction: RouteHandler<typeof getAboutContent> = async (
       return c.json(
         {
           succeed: true,
-          content: res[0].aboutHtml,
+          data: res[0].aboutHtml,
         },
         200
       );

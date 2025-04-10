@@ -14,16 +14,21 @@ function CookiesPolicy() {
         refetchOnWindowFocus: false
     })
     return (
-        <div className="container mx-auto mb-24">
+        <div className="container mx-auto">
             <div className="flex justify-center items-center max-w-2xl mx-auto mt-3 max-sm:px-6">
                 <h1 className="text-3xl font-bold text-center">Lunch N Specials</h1>
             </div>
-            <div className="text-center mt-5 max-w-2xl mx-auto max-sm:px-4">
-                <h2 className="text-xl font-semibold my-2">Cookies Policy</h2>
-                {isLoading && <Loader />}
-                {isSuccess && <div className="revert-tailwind font-montserrat" dangerouslySetInnerHTML={{ __html: data.content || '' }} />}
-            </div>
-        </div>
+            {isLoading &&
+                <div className="flex justify-center items-center w-full h-full fixed text-center bg-background/90 px-2.5 top-0 z-50 left-0">
+                    <Loader />
+                </div>
+            }
+            {isSuccess &&
+                <div className="mb-32 mt-5 max-sm:px-4 max-w-full overflow-x-hidden">
+                    <div className="no-tailwind" dangerouslySetInnerHTML={{ __html: data.data?.content || '' }}></div>
+                </div>
+            }
+        </div >
     )
 }
 

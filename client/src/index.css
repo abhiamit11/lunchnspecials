@@ -89,6 +89,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-montserrat: "Montserrat", "sans-serif";
 }
 
 @layer base {
@@ -113,4 +114,9 @@
   .revert-tailwind > * {
     all: revert;
   }
+}
+
+.no-tailwind * {
+  all: revert;
+  box-sizing: border-box;
 }

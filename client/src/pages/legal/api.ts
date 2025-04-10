@@ -2,7 +2,7 @@ import axios from "axios";
 
 type ContentResponseSchema = {
   succeed: string;
-  content: string;
+  data: { content: string };
 };
 
 export async function getAboutContent(): Promise<ContentResponseSchema> {

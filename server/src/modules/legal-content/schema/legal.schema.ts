@@ -1,8 +1,13 @@
 import { ObjectId } from "mongodb";
 import { z } from "zod";
 
+const contentSchema = z.object({
+  content: z.string(),
+  isHtml: z.boolean(),
+});
+
 export const AboutSchema = z.object({
-  aboutHtml: z.string(),
+  aboutHtml: contentSchema,
 });
 
 export const ResponseSchema = z.object({
@@ -12,27 +17,28 @@ export const ResponseSchema = z.object({
 
 export const ContentResponseSchema = z.object({
   succeed: z.boolean(),
-  content: z.string(),
+  data: contentSchema,
 });
 
 export const PrivacyPolicySchema = z.object({
-  privacyHtml: z.string(),
+  privacyHtml: contentSchema,
 });
 
 export const CookiesSchema = z.object({
-  cookiesHtml: z.string(),
+  cookiesHtml: contentSchema,
 });
 
 export const TermsConditionsSchema = z.object({
-  termsConditionsHtml: z.string(),
+  termsConditionsHtml: contentSchema,
 });
 
+type contentSchema = z.infer<typeof contentSchema>;
 export type LegalContentType = {
   _id?: ObjectId;
-  aboutHtml: string;
-  privacyHtml: string;
-  termsConditionsHtml: string;
-  cookiesHtml: string;
+  aboutHtml: contentSchema;
+  privacyHtml: contentSchema;
+  termsConditionsHtml: contentSchema;
+  cookiesHtml: contentSchema;
   updatedAt: string;
   creationAt: string;
 };

@@ -119,3 +119,8 @@
     }
   }
 }
+
+.no-tailwind * {
+  all: revert;
+  box-sizing: border-box;
+}

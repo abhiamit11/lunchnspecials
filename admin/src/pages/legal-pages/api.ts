@@ -1,10 +1,5 @@
 import axios from "axios";
-import {
-  AboutType,
-  CookiesType,
-  PrivacyPolicyType,
-  TermsConditionsType,
-} from "./schema";
+import { contentType } from "./schema";
 import { API_URL } from "@/constant";
 
 type ResponseType = {
@@ -14,13 +9,14 @@ type ResponseType = {
 
 type ContentResponseSchema = {
   succeed: string;
-  content: string;
+  data: contentType;
 };
 
 // About
 export async function updateAboutContent(
-  data: AboutType
+  aboutHtml: contentType
 ): Promise<ResponseType> {
+  const data = { aboutHtml: { ...aboutHtml } };
   return axios
     .post(`${API_URL}legal-content/about`, data)
     .then((response) => response.data);
@@ -34,8 +30,9 @@ export async function getAboutContent(): Promise<ContentResponseSchema> {
 
 // Privacy Policy
 export async function updatePrivacyPolicyContent(
-  data: PrivacyPolicyType
+  privacyHtml: contentType
 ): Promise<ResponseType> {
+  const data = { privacyHtml: { ...privacyHtml } };
   return axios
     .post(`${API_URL}legal-content/privacy-content`, data)
     .then((response) => response.data);
@@ -49,8 +46,9 @@ export async function getPrivacyPolicyContent(): Promise<ContentResponseSchema> 
 
 // Terms and Conditions
 export async function updateTermsContent(
-  data: TermsConditionsType
+  termsConditionsHtml: contentType
 ): Promise<ResponseType> {
+  const data = { termsConditionsHtml: { ...termsConditionsHtml } };
   return axios
     .post(`${API_URL}legal-content/terms-content`, data)
     .then((response) => response.data);
@@ -64,8 +62,9 @@ export async function getTermsContent(): Promise<ContentResponseSchema> {
 
 // Cookies
 export async function updateCookiesContent(
-  data: CookiesType
+  cookiesHtml: contentType
 ): Promise<ResponseType> {
+  const data = { cookiesHtml: { ...cookiesHtml } };
   return axios
     .post(`${API_URL}legal-content/cookies-content`, data)
     .then((response) => response.data);
