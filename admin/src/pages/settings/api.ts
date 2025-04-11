@@ -42,3 +42,21 @@ export async function uploadLogo(data: FormData): Promise<unknown> {
   };
   return await axios.request(options).then((response) => response.data);
 }
+
+export async function exportRestaurants(): Promise<{
+  total: number;
+  data: any;
+}> {
+  return axios
+    .post(`/admin/restaurants/export/all`)
+    .then((response) => response.data);
+}
+
+export async function deleteRestaurants(): Promise<{
+  total: number;
+  data: any;
+}> {
+  return axios
+    .delete(`/admin/all/restaurants`)
+    .then((response) => response.data);
+}

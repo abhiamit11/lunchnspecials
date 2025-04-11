@@ -49,13 +49,14 @@ export function DataTableViewOptions<TData>({
         },
     })
 
-    const rows = table.getFilteredSelectedRowModel().rows
-    const hasRowsSelected = rows.length > 0
+    const rows = table.getState().rowSelection //table.getFilteredSelectedRowModel().rows
+    const rowsArr = Object.keys(rows);
+    const hasRowsSelected = rowsArr.length > 0
     const onSelectedRowDelete = () => {
         const ids: string[] = []
-        rows.forEach(row => {
-            const { _id } = row.original as { _id: string }
-            ids.push(_id)
+        rowsArr.forEach(row => {
+            // const { _id } = row.original as { _id: string }
+            ids.push(row)
         });
         mutate({ ids })
     }
@@ -92,8 +93,14 @@ export function DataTableViewOptions<TData>({
             <div className="flex justify-end items-center gap-3">
                 {hasRowsSelected &&
                     <>
+                        <Button
+                            variant={'outline'}
+                            type="button"
+                            size={"sm"}
+                            className="h-8"
+                            onClick={() => table.resetRowSelection()}>Uncheck</Button>
 
-                        <ExportButton rows={rows} table={table} />
+                        <ExportButton rows={rowsArr} table={table} />
                         <AlertDialog open={alertDialogState} onOpenChange={setalertDialogState}>
                             <AlertDialogTrigger asChild>
                                 <Button
@@ -106,7 +113,7 @@ export function DataTableViewOptions<TData>({
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogTitle className='text-foreground'>Are you absolutely sure?</AlertDialogTitle>
                                     <AlertDialogDescription>
                                         You are about to delete
                                         <span className="font-bold"> {rows.length} </span>

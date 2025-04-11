@@ -6,24 +6,26 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 type SettingCardProps = {
     icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>
     title?: string
     description?: string
     children: React.ReactNode
+    className?: string
 }
-const SettingCard = ({ title, description, icon: Icon, children }: SettingCardProps) => {
+const SettingCard = ({ title, description, icon: Icon, children, className }: SettingCardProps) => {
     return (
         <Card>
             <CardHeader>
                 <CardTitle>
-                    <div className="flex justify-start items-center gap-2">
+                    <div className={cn("flex justify-start items-center gap-2", className)}>
                         <Icon />
                         {title!}
                     </div>
                 </CardTitle>
-                <CardDescription className="truncate">{description!}</CardDescription>
+                <CardDescription className={cn("truncate")}>{description!}</CardDescription>
             </CardHeader>
             <CardContent className="pb-4">
                 {children}

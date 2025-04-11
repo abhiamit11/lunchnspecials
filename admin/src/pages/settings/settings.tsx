@@ -1,8 +1,10 @@
-import { ImageUp, KeyRound, Link } from "lucide-react"
+import { Download, ImageUp, KeyRound, Link, Trash2 } from "lucide-react"
 import ChangePassword from "./change-password"
 import SettingCard from "@/components/setting-card"
 import UpdateLinks from "./update-links"
 import UpdateLogo from "./logo/site-logo"
+import DeleteEverything from "./delete-everything"
+import DownloadEverything from "./download-everything"
 
 function Settings() {
     return (
@@ -40,6 +42,27 @@ function Settings() {
                     >
                         <div className="flex justify-end items-center">
                             <ChangePassword />
+                        </div>
+                    </SettingCard>
+
+                    <SettingCard
+                        icon={Download}
+                        title="Download everything"
+                        description="You can export/download all restaurants with this."
+                    >
+                        <div className="flex justify-end items-center">
+                            <DownloadEverything />
+                        </div>
+                    </SettingCard>
+
+                    <SettingCard
+                        icon={Trash2}
+                        title="Delete everything"
+                        description="You can Delete all restaurants with this."
+                        className='text-destructive'
+                    >
+                        <div className="flex justify-end items-center">
+                            <DeleteEverything />
                         </div>
                     </SettingCard>
                 </div>

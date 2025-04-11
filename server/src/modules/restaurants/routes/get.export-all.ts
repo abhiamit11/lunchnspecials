@@ -4,23 +4,14 @@ import { ErrorResponse } from "../../../constants";
 
 const tags = ["Admin Restaurants"];
 
-const exportManyRestaurant = createRoute({
+const exportRestaurants = createRoute({
   tags,
-  summary: "Export",
-  description:
-    "Export the restaurants from the database using the provided IDs.",
+  summary: "Export All",
+  description: "Export the all restaurants from the database.",
   security: [{ Bearer: [] }],
   method: "post",
-  path: "/export/many",
-  request: {
-    body: {
-      content: {
-        "application/json": {
-          schema: deleteManySchema,
-        },
-      },
-    },
-  },
+  path: "/export/all",
+  request: {},
   responses: {
     200: {
       content: {
@@ -34,4 +25,4 @@ const exportManyRestaurant = createRoute({
   },
 });
 
-export default exportManyRestaurant;
+export default exportRestaurants;

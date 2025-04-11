@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { getTermsContent, updateTermsContent } from "./api";
 import { contentSchema, contentType } from "./schema";
+import Loader from "@/components/loader";
 
 function TermsConditions() {
     const form = useForm<contentType>({
@@ -113,7 +114,11 @@ function TermsConditions() {
     const [openAlert, setOpenAlert] = useState(false)
     return (
         <>
-
+            {isLoading &&
+                <div className="flex justify-center items-center w-full h-full absolute text-center bg-background/90 px-2.5 top-0 z-50 left-0">
+                    <Loader className="h-12 w-12" />
+                </div>
+            }
             <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

@@ -61,3 +61,30 @@ export type MapRestaurant = {
   category: "drink" | "lunch" | "both";
   coordinates: { latitude: string; longitude: string };
 };
+
+export const exportSchema = z.object({
+  succeed: z.boolean(),
+  total: z.number(),
+  data: z
+    .array(
+      z.object({
+        name: z.string(),
+        website: z.string(),
+        description: z.string(),
+        address: z.string(),
+        zip: z.string(),
+        phone: z.string(),
+        rating: z.string(),
+        coordinates_latitude: z.string(),
+        coordinates_longitude: z.string(),
+        menu_day: z.string(),
+        menu_name: z.string(),
+        menu_price: z.string(),
+        menu_description: z.string(),
+        menu_category: z.string(),
+        menu_timings_opening: z.string(),
+        menu_timings_closing: z.string(),
+      })
+    )
+    .or(z.null()),
+});

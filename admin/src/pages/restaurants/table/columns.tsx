@@ -9,6 +9,7 @@ import ViewMenu from "./view-menu";
 export const columns: ColumnDef<Restaurant>[] = [
     {
         id: "select",
+        accessorKey: "_id",
         header: ColumnsHeaderCheckbox,
         cell: ColumnsCellCheckbox
     },
