@@ -8,65 +8,52 @@ import { getRestaurant, getRestaurants, Restaurant } from "../lib/api";
 import { useEffect } from "react";
 import { useSearch } from "@tanstack/react-router";
 import { CoordinatesParms } from "./MapProvider";
-import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
 import CustomContent from "@arcgis/core/popup/content/CustomContent.js";
 import { createRoot } from "react-dom/client";
 import MapPopupTemplate from "./MapPopupTemplate";
 import ReactGA from 'react-ga4';
+import graphicsLayerToMap from "@/lib/graphics-layer";
+import CoffeeMarker from "../assets/coffee-pin.svg"
 
-const lunchMarker: Pick<__esri.PictureMarkerSymbol, 'type' | 'url' | 'width' | 'height'> = {
-    type: "picture-marker",
-    url: LunchMarker,
-    width: 42,
-    height: 52,
-}
+const markerConfig = {
+    lunch: { url: LunchMarker },
+    drink: { url: DrinkMarker },
+    ct: { url: CoffeeMarker },
+    both: { url: BothMarker }
+};
 
-const drinkMarker: Pick<__esri.PictureMarkerSymbol, 'type' | 'url' | 'width' | 'height'> = {
-    type: "picture-marker",
-    url: DrinkMarker,
-    width: 42,
-    height: 52,
-}
+const getMarkerSymbol = (category: "drink" | "lunch" | "ct" | "both") => {
+    return ({
+        type: "picture-marker",
+        url: markerConfig[category]?.url || markerConfig.lunch.url,
+        width: 42,
+        height: 52
+    })
+};
 
-const bothMarker: Pick<__esri.PictureMarkerSymbol, 'type' | 'url' | 'width' | 'height'> = {
-    type: "picture-marker",
-    url: BothMarker,
-    width: 42,
-    height: 52,
-}
+const layerId = 'restaurantsLocationLayer';
 
-const layerId = 'restaurantsLocationLayer'
 function Map() {
     useEffect(() => {
         ReactGA.send({ hitType: "pageview", page: window.location.pathname });
     }, []);
-    const { doseLayerExist, addGraphicsLayer } = useMap()
-    const { x, y, day }: CoordinatesParms & { day: string } = useSearch({ from: "/" })
+
+    const { doseLayerExist, addGraphicsLayer } = useMap();
+    const { x, y, day }: CoordinatesParms & { day: string } = useSearch({ from: "/" });
+
     const { data, isSuccess } = useQuery({
         queryKey: ['restaurants', [x, y, day]],
-        queryFn: () => getRestaurants(x || 0, y || 0, 25, day),
-        refetchOnWindowFocus: false
-    })
-
-    const symbolSwitch = (category: "drink" | "lunch" | "both") => {
-        switch (category) {
-            case "drink":
-                return drinkMarker;
-            case "lunch":
-                return lunchMarker;
-            case "both":
-                return bothMarker;
-            default:
-                return lunchMarker;
-        }
-    }
+        queryFn: () => getRestaurants(x, y, 25, day),
+        refetchOnWindowFocus: false,
+        enabled: Boolean(x && y)
+    });
 
     const onSetRestaurantPoint = (restaurant: Restaurant) => {
-        const { coordinates: { latitude, longitude }, name, _id, category } = restaurant
+        const { coordinates: { latitude, longitude }, name, _id, category } = restaurant;
         const point: any = {
             type: "point",
             longitude: parseFloat(longitude),
-            latitude: parseFloat(latitude),
+            latitude: parseFloat(latitude)
         };
 
         const popupTemplate = {
@@ -75,67 +62,54 @@ function Map() {
             content: [
                 new CustomContent({
                     outFields: ['*'],
-                    creator: async (event) => {
+                    creator: async () => {
                         const div = document.createElement('div');
-                        if (event) {
-                            const res = await getRestaurant(_id, day)
-                            ReactGA.event({
-                                category: 'engagement',
-                                action: 'restaurant_engagement',
-                                label: res.data.name
-                            });
-                            const root = createRoot(div);
-                            root.render(<MapPopupTemplate data={res.data} day={day} />);
-                        }
+                        const res = await getRestaurant(_id, day);
+                        ReactGA.event({
+                            category: 'engagement',
+                            action: 'restaurant_engagement',
+                            label: res.data.name
+                        });
+                        const root = createRoot(div);
+                        root.render(<MapPopupTemplate data={res.data} day={day} />);
                         return div;
-                    },
-                }),
+                    }
+                })
             ]
         };
 
-        const symbol = symbolSwitch(category || "lunch") as __esri.SymbolProperties;
-        //(category == "drink" ? drinkMarker : lunchMarker) as __esri.SymbolProperties;
+        const symbol: any = getMarkerSymbol(category || "lunch");
 
         const pointGraphic = new Graphic({
             geometry: point,
             symbol,
-            attributes: {
-                _id
-            },
-            popupTemplate,
+            attributes: { _id },
+            popupTemplate
         });
 
-        return [pointGraphic];
-    }
+        return pointGraphic;
+    };
 
     const clearGraphicsLayer = () => {
-        const existLayer = doseLayerExist(layerId)
-        if (existLayer) existLayer.destroy();
-    }
+        const existingLayer = doseLayerExist(layerId);
+        if (existingLayer) existingLayer.destroy();
+    };
 
     useEffect(() => {
-        clearGraphicsLayer()
-        if (isSuccess) {
-            const restaurants = data.data
-            const points: Graphic[] = []
-            restaurants.forEach(restaurant => {
-                points.push(...onSetRestaurantPoint(restaurant))
-            });
+        if (isSuccess && data?.data) {
+            clearGraphicsLayer();
 
-            const gl = new GraphicsLayer({ 'id': layerId })
-            gl.addMany(points)
-            addGraphicsLayer(gl)
+            const points = data.data.map(onSetRestaurantPoint);
+            const gl = graphicsLayerToMap(layerId, points);
+            addGraphicsLayer(gl);
         }
+
         return () => {
+            clearGraphicsLayer(); // Clean up on unmount
+        };
+    }, [isSuccess, data, addGraphicsLayer, doseLayerExist]);
 
-        }
-    }, [isSuccess, data])
-
-    return (
-        <>
-
-        </>
-    )
+    return null; // The component does not render any JSX itself
 }
 
-export default Map
+export default Map;

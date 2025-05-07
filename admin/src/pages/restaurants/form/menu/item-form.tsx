@@ -96,6 +96,7 @@ const RestaurantItemForm = ({ index, onOpenChange }: { index: number, onOpenChan
     const categories = [
         { label: "Lunch", value: "lunch" },
         { label: "Drink", value: "drink" },
+        { label: "Coffee/Tea", value: "ct" },
     ]
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

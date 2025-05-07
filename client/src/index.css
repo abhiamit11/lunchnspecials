@@ -31,6 +31,7 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
   --radius: 0.6rem;
+  --popup-margin-top: 80px;
 }
 
 .dark {
@@ -104,7 +105,7 @@
     @apply bottom-14 right-4.5;
   }
   .esri-popup__main-container.esri-widget.esri-popup--shadow {
-    margin-top: 80px;
+    margin-top: var(--popup-margin-top);
   }
 
   .revert-tailwind {
@@ -113,6 +114,13 @@
 
   .revert-tailwind > * {
     all: revert;
+  }
+
+  .esri-feature-content h3 {
+    margin: 4px 0 !important;
+  }
+  .esri-feature-content p {
+    margin-bottom: 2px !important;
   }
 }
 

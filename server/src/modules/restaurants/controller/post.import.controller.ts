@@ -4,7 +4,12 @@ import importRestaurants from "../routes/post.import";
 import * as fs from "node:fs";
 import csv = require("csv-parser");
 import { restaurantType } from "../schema/restaurants.schema";
-import { BulkWriteResult, InsertManyResult, ObjectId } from "mongodb";
+import {
+  BulkWriteResult,
+  InsertManyResult,
+  MongoBulkWriteError,
+  ObjectId,
+} from "mongodb";
 
 type csvObject = {
   restaurant_id?: string;
@@ -85,8 +90,14 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
 
     try {
       data.forEach((item) => {
+        if (
+          (!item.name && !item.address) ||
+          !item.coordinates_latitude ||
+          !item.coordinates_longitude
+        ) {
+          return;
+        }
         const key = `${item.name}|${item.address}`;
-
         if (!restaurantMap.has(key)) {
           let restaurantId = new ObjectId();
 
@@ -204,14 +215,6 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
           .collection("restaurants")
           .bulkWrite(bulkOperationToRestaurant);
 
-        if (!result) {
-          throw new Error("Error While Bulk Operation To Restaurant");
-        }
-
-        if (result.hasWriteErrors()) {
-          throw new Error("Error While Bulk Operation To Restaurant");
-        }
-
         await db.collection("import_history").insertOne({
           importId,
           importedAt: new Date().toISOString(),
@@ -220,8 +223,29 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
           succeed: result.isOk(),
         });
 
+        if (!result) {
+          throw new Error("Error While Bulk Operation To Restaurant");
+        }
+
+        if (result.hasWriteErrors()) {
+          throw new Error("Error While Bulk Operation To Restaurant");
+        }
+
         resolve(result);
       } catch (error) {
+        console.log("Link 231: bulkWrite error:->", error);
+        if (error instanceof MongoBulkWriteError) {
+          console.log("MongoBulkWriteError", error.result);
+          const result = error.result;
+          await db.collection("import_history").insertOne({
+            importId,
+            importedAt: new Date().toISOString(),
+            importedCount: result.insertedCount + result.upsertedCount,
+            updatedCount: result.modifiedCount,
+            succeed: result.isOk(),
+            partial: true,
+          });
+        }
         reject(error);
       }
     });
@@ -232,7 +256,13 @@ async function bulkInsertCSV(filePath: string): Promise<resType> {
   const data: any[] = [];
   return new Promise((resolve, reject) => {
     fs.createReadStream(filePath)
-      .pipe(csv())
+      .pipe(
+        csv({
+          mapHeaders: ({ header }) => {
+            return header.toLowerCase().replace(/"/g, "").trim();
+          },
+        })
+      )
       .on("headers", (headers) => {
         if (Array.isArray(headers)) {
           if (headers.length < headersRequired.length) {

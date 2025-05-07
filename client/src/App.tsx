@@ -21,6 +21,7 @@ declare module '@tanstack/react-router' {
 }
 
 ReactGA.initialize(GA_TAG);
+
 function App() {
   return (
     <>

@@ -1,8 +1,5 @@
 import { createRoute, z } from "@hono/zod-openapi";
-import {
-  MapRestaurantSchema,
-  restaurantSchema,
-} from "../schema/restaurants.schema";
+import { MapRestaurantSchema } from "../schema/restaurants.schema";
 import { coordinatesQuerySchema } from "../../../schema";
 import { ErrorResponse } from "../../../constants";
 import analyticsMiddleware from "../../../middleware/analytics";

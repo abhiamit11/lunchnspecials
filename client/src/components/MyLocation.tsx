@@ -60,7 +60,7 @@ function MyLocation() {
 
     return (
         <div className='px-2 md:px-0'>
-            <Button size={"icon"} onClick={getLocation} className="h-[42px] w-[42px]">
+            <Button aria-label="my-location" size={"icon"} onClick={getLocation} className="h-[42px] w-[42px]">
                 <Locate />
             </Button>
         </div>

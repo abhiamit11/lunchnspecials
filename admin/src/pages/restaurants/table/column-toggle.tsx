@@ -1,5 +1,5 @@
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { Settings2 } from "lucide-react"
+import { Eye } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input"
 import { useNavigate, useSearch } from "@tanstack/react-router"
 import { PaginationType } from "../types"
 import ExportButton from "./export-button"
+import Filters from "./filters"
 
 
 export function DataTableViewOptions<TData>({
@@ -132,7 +133,8 @@ export function DataTableViewOptions<TData>({
                         </AlertDialog>
                     </>
                 }
-                <div>
+                <div className=" flex justify-end items-center gap-2">
+                    <Filters />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
@@ -140,7 +142,7 @@ export function DataTableViewOptions<TData>({
                                 size="sm"
                                 className="hidden h-8 lg:flex"
                             >
-                                <Settings2 />
+                                <Eye />
                                 View
                             </Button>
                         </DropdownMenuTrigger>

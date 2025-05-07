@@ -1,0 +1,10 @@
+# robots.txt for React project
+
+User-agent: *
+Disallow: /static/
+Disallow: /build/
+Disallow: /private/
+Allow: /
+
+# Sitemap location (optional but recommended)
+Sitemap: https://lunchnspecials.com/sitemap.xml

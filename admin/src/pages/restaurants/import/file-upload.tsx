@@ -44,6 +44,7 @@ function FileUpload() {
             form.reset(defaultValues)
         },
         onError: (e) => {
+            queryClient.invalidateQueries({ queryKey: ["import-histroy"] })
             toast({
                 variant: 'destructive',
                 title: "Oops! Something went wrong. Please try again later.",

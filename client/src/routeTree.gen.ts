@@ -13,7 +13,6 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
 
 // Create Virtual Routes
 
@@ -21,6 +20,7 @@ const TermsConditionsLazyImport = createFileRoute('/terms-conditions')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const CookiesPolicyLazyImport = createFileRoute('/cookies-policy')()
 const AboutUsLazyImport = createFileRoute('/about-us')()
+const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
@@ -54,11 +54,11 @@ const AboutUsLazyRoute = AboutUsLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about-us.lazy').then((d) => d.Route))
 
-const IndexRoute = IndexImport.update({
+const IndexLazyRoute = IndexLazyImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
@@ -68,7 +68,7 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+      preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/about-us': {
@@ -105,7 +105,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof IndexLazyRoute
   '/about-us': typeof AboutUsLazyRoute
   '/cookies-policy': typeof CookiesPolicyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
@@ -113,7 +113,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof IndexLazyRoute
   '/about-us': typeof AboutUsLazyRoute
   '/cookies-policy': typeof CookiesPolicyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
@@ -122,7 +122,7 @@ export interface FileRoutesByTo {
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
+  '/': typeof IndexLazyRoute
   '/about-us': typeof AboutUsLazyRoute
   '/cookies-policy': typeof CookiesPolicyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
@@ -155,7 +155,7 @@ export interface FileRouteTypes {
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  IndexLazyRoute: typeof IndexLazyRoute
   AboutUsLazyRoute: typeof AboutUsLazyRoute
   CookiesPolicyLazyRoute: typeof CookiesPolicyLazyRoute
   PrivacyPolicyLazyRoute: typeof PrivacyPolicyLazyRoute
@@ -163,7 +163,7 @@ export interface RootRouteChildren {
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  IndexLazyRoute: IndexLazyRoute,
   AboutUsLazyRoute: AboutUsLazyRoute,
   CookiesPolicyLazyRoute: CookiesPolicyLazyRoute,
   PrivacyPolicyLazyRoute: PrivacyPolicyLazyRoute,
@@ -188,7 +188,7 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.tsx"
+      "filePath": "index.lazy.tsx"
     },
     "/about-us": {
       "filePath": "about-us.lazy.tsx"

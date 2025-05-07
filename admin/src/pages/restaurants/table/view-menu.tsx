@@ -14,7 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MenuItem } from '../types';
-import { Martini, Utensils } from 'lucide-react';
+import { Coffee, Martini, Utensils } from 'lucide-react';
 import { MenuTimings } from '../form/menu/menu-form';
 
 
@@ -68,11 +68,11 @@ function ViewMenu({ id }: { id: string }) {
                                                 <td className="px-4 py-2 text-foreground  capitalize">{item.day}</td>
                                                 <td className="px-4 py-2 text-foreground" colSpan={2}>
                                                     <div className='flex justify-start items-center gap-1'>
-                                                        {item.category == 'drink' ? <Martini /> : <Utensils />}
+                                                        <MenuIcon category={item.category} />
                                                         {item.name}
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-2 text-foreground ">${item.price}</td>
+                                                <td className="px-4 py-2 text-foreground ">{item.price ? <>${item.price}</> : <>-</>}</td>
                                                 <td className="px-4 py-2 text-foreground">
                                                     <MenuTimings timings={item.timings} />
                                                 </td>
@@ -103,3 +103,17 @@ function ViewMenu({ id }: { id: string }) {
 }
 
 export default ViewMenu
+
+
+const MenuIcon = ({ category }: { category: string }) => {
+    switch (category) {
+        case 'drink':
+            return <Martini />;
+        case 'lunch':
+            return <Utensils />;
+        case 'ct':
+            return <Coffee />;
+        default:
+            return <Utensils />;
+    }
+}

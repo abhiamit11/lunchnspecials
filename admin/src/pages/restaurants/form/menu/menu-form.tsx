@@ -42,7 +42,6 @@ function MenuForm() {
     }
 
     const onEdit = (index: number) => {
-        console.log('first', index)
         setMenuDialog(true)
         setCurrentIndex(index)
     }
@@ -82,7 +81,7 @@ function MenuForm() {
                                                 {item.name}
                                             </div>
                                         </td>
-                                        <td className="px-4 py-2 text-foreground ">${item.price}</td>
+                                        <td className="px-4 py-2 text-foreground ">{item.price ? <>${item.price}</> : <>-</>}</td>
                                         <td className="px-4 py-2 text-foreground">
                                             <MenuTimings timings={item.timings} />
                                         </td>
@@ -140,14 +139,20 @@ function MenuForm() {
 export default MenuForm
 
 export const MenuTimings = ({ timings }: Pick<MenuItem, 'timings'>) => {
-    if (timings && timings.opening && timings.closing) {
+    if (timings &&
+        (timings.opening && timings.opening != '' && timings.opening.includes(":")) &&
+        (timings.closing && timings.closing != '' && timings.closing.includes(":"))) {
         const openingTime = parse(timings.opening, 'HH:mm', new Date());
         const closingTime = parse(timings.closing, 'HH:mm', new Date());
         return <>
             {timings && <div className="flex justify-start items-center gap-1 w-fit">
-                <span>{format(openingTime, 'hh:mm a')}</span>
-                <span>to</span>
-                <span>{format(closingTime, 'hh:mm a')}</span>
+                {(openingTime && closingTime) &&
+                    <>
+                        <span>{format(openingTime, 'hh:mm a')}</span>
+                        <span>to</span>
+                        <span>{format(closingTime, 'hh:mm a')}</span>
+                    </>
+                }
             </div>}
         </>
     }

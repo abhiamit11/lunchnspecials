@@ -62,4 +62,5 @@ export type ImportHistoryType = {
   importedAt: string;
   importedCount: number;
   succeed: boolean;
+  partial?: boolean;
 };

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { useNavigate } from "@tanstack/react-router"
-import { ChevronLeft, Trash2 } from "lucide-react"
+import { ChevronLeft, Info, Trash2 } from "lucide-react"
 import { DataTable } from "./table/data-table"
 import { columns } from "./table/columns"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
@@ -72,7 +72,7 @@ function Duplicates() {
                             <AlertDialogHeader>
                                 <AlertDialogTitle className="text-foreground">Are you absolutely sure?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                    <span className="block my-2 text-gray-900 font-medium">
+                                    <span className="block my-2 font-medium">
                                         It will remove all duplicate restaurants displayed in the table, keeping only the most recently updated restaurant.
                                     </span>
                                     <span className="text-destructive font-medium">
@@ -95,6 +95,13 @@ function Duplicates() {
             <div className="bg-background p-5 rounded-lg">
                 <div className="container mx-auto">
                     <h2 className="my-2"> Total: <strong> {isSuccess ? data.total : 0} </strong> duplicate restaurant records in the system.</h2>
+                    <div className="mt-1 mb-2 flex justify-start items-center gap-1.5">
+                        <Info />
+                        <p className="text-sm text-muted-foreground">
+                            Duplicate Count should display only the number of duplicate records and should not include the original record. <br />
+                            For example, if a restaurant appears 3 times in the system, the Duplicate Count will show 2, as the original entry is not counted.
+                        </p>
+                    </div>
                     {isSuccess && <DataTable data={data.data} columns={columns} />}
                 </div>
             </div>
