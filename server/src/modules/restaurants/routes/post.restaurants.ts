@@ -16,7 +16,12 @@ const addRestaurant = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: restaurantSchema,
+          schema: restaurantSchema.and(
+            z.object({
+              isPartner: z.boolean().optional(),
+              isNewOrRevised: z.boolean().optional(),
+            })
+          ),
         },
       },
     },

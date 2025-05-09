@@ -11,8 +11,8 @@ const coordinatesSchema = z.object({
 });
 
 const timingsSchema = z.object({
-  opening: z.string(),
-  closing: z.string(),
+  opening: z.string().optional().or(z.null()),
+  closing: z.string().optional().or(z.null()),
 });
 
 const menuSchema = z.object({
@@ -34,6 +34,8 @@ export const restaurantSchema = z.object({
   menu: z.array(menuSchema),
   phone: z.string().optional(),
   rating: z.string().optional(),
+  isNewOrRevised: z.boolean().optional(),
+  isPartner: z.boolean().optional(),
 });
 
 export const deleteManySchema = z.object({
@@ -84,6 +86,10 @@ export const exportSchema = z.object({
         menu_category: z.string(),
         menu_timings_opening: z.string(),
         menu_timings_closing: z.string(),
+        new_or_revised: z.string().optional(),
+        business_partner: z.string().optional(),
+        creation_date: z.string().optional(),
+        updated_date: z.string().optional(),
       })
     )
     .or(z.null()),

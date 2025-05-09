@@ -14,21 +14,28 @@ export type Restaurant = {
   address: string;
   category: "drink" | "lunch" | "both" | undefined;
   coordinates: { latitude: string; longitude: string };
+  isPartner: boolean | null;
+  isNewOrRevised: boolean | null;
+  updatedAt: string;
 };
 
 export async function getRestaurants(
   x: number,
   y: number,
   r?: number | undefined,
-  day?: string
+  day?: string,
+  init?: boolean
 ): Promise<{
   total: number;
   data: Restaurant[];
 }> {
   let query = r ? `&radius=${r}` : "";
   query = query + (day ? `&day=${day}` : "");
+  const first = init ? `&init=${init}` : "";
   return axios
-    .get(`/restaurants/map/?x=${x}&y=${y}${query}`, { withCredentials: true })
+    .get(`/restaurants/map/?x=${x}&y=${y}${query}${first}`, {
+      withCredentials: true,
+    })
     .then((response) => response.data);
 }
 

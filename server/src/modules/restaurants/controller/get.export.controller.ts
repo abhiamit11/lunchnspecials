@@ -44,6 +44,11 @@ type MenuType = {
   restaurantId: ObjectId;
 };
 
+type exportRestaurantType = restaurantType & {
+  updatedAt: string;
+  creationAt: string;
+};
+
 const exportManyRestaurantAction: RouteHandler<
   typeof exportManyRestaurant
 > = async (c) => {
@@ -59,7 +64,7 @@ const exportManyRestaurantAction: RouteHandler<
       .catch((error) => console.error(error));
 
     const restaurantsArray = await db
-      .collection<restaurantType>("restaurants")
+      .collection<exportRestaurantType>("restaurants")
       .find({ _id: { $in: idsToExport } })
       .toArray()
       .catch((error) => console.error(error));
@@ -70,6 +75,16 @@ const exportManyRestaurantAction: RouteHandler<
 
     const data: csvObject[] = [];
     restaurantsArray.forEach((restaurant) => {
+      const columnsToAddLast = {
+        new_or_revised: restaurant.isNewOrRevised,
+        business_partner: restaurant.isPartner,
+        creation_date: restaurant.creationAt
+          ? new Date(restaurant.creationAt).toDateString()
+          : "",
+        updated_date: restaurant.creationAt
+          ? new Date(restaurant.creationAt).toDateString()
+          : "",
+      };
       const exportObj = {
         restaurant_id: restaurant._id,
         name: restaurant.name,
@@ -95,7 +110,7 @@ const exportManyRestaurantAction: RouteHandler<
       };
 
       if (!Array.isArray(menuArray) || menuArray.length === 0) {
-        data.push({ ...exportObj, ...menu });
+        data.push({ ...exportObj, ...menu, ...columnsToAddLast });
         return;
       }
 
@@ -104,7 +119,7 @@ const exportManyRestaurantAction: RouteHandler<
       );
 
       if (!restaurantMenu) {
-        data.push({ ...exportObj, ...menu });
+        data.push({ ...exportObj, ...menu, ...columnsToAddLast });
         return;
       }
 
@@ -119,6 +134,7 @@ const exportManyRestaurantAction: RouteHandler<
           menu_category: item.category,
           menu_timings_opening: item.timings?.opening || "",
           menu_timings_closing: item.timings?.closing || "",
+          ...columnsToAddLast,
         });
       });
     });

@@ -21,7 +21,6 @@ function LogoUpload() {
     const [preview, setPreview] = useState<string | undefined>(undefined)
     useEffect(() => {
         if (images) {
-            console.log(images instanceof FileList)
             if (images instanceof FileList && images.length > 0) {
                 const image = images[0]
                 const objectUrl = URL.createObjectURL(image)

@@ -5,7 +5,7 @@ import getRestaurantsOnMap from "../routes/get.map";
 import { coordinatesQuerySchema } from "../../../schema";
 
 const getRestaurantsOnMapAction: RouteHandler<
-  typeof getRestaurantsOnMap
+  typeof getRestaurantsOnMap & any
 > = async (c) => {
   try {
     const queryParams = c.req.query();
@@ -48,6 +48,9 @@ const getRestaurantsOnMapAction: RouteHandler<
             address: { $first: "$address" },
             menuItems: { $push: "$menuDetails.items" },
             coordinates: { $first: "$coordinates" },
+            isPartner: { $first: "$isPartner" },
+            isNewOrRevised: { $first: "$isNewOrRevised" },
+            updatedAt: { $first: "$updatedAt" },
           },
         },
         {
@@ -88,9 +91,12 @@ const getRestaurantsOnMapAction: RouteHandler<
           $project: {
             _id: 1,
             name: 1,
-            address: 1,
+            // address: 1,
             coordinates: 1,
             category: 1,
+            isPartner: 1,
+            isNewOrRevised: 1,
+            updatedAt: 1,
           },
         },
       ])

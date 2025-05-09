@@ -16,11 +16,26 @@ export async function getRestaurants(pagination: PaginationType): Promise<{
   total: number;
   data: Restaurant[];
 }> {
-  const { page, limit, search } = pagination;
+  const {
+    page,
+    limit,
+    search,
+    createdAtEnd,
+    createdAtStart,
+    updatedAtEnd,
+    updatedAtStart,
+  } = pagination;
   const query = `?page=${page || 1}&limit=${limit || 10}&sortBy=updatedAt&sortOrder=desc`;
+  const filters =
+    `` +
+    (createdAtEnd ? `&createdAtEnd=${createdAtEnd}` : ``) +
+    (createdAtStart ? `&createdAtStart=${createdAtStart}` : ``) +
+    (updatedAtEnd ? `&updatedAtEnd=${updatedAtEnd}` : ``) +
+    (updatedAtStart ? `&updatedAtStart=${updatedAtStart}` : ``);
+
   const s = search ? `&search=${search}` : "";
   return axios
-    .get(`/restaurants${query + s}`, { headers })
+    .get(`/restaurants${query + s + filters}`, { headers })
     .then((response) => response.data);
 }
 

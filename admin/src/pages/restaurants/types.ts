@@ -33,6 +33,10 @@ export type PaginationType = {
   sortBy?: string | undefined;
   sortOrder?: "asc" | "desc" | undefined;
   search?: string;
+  updatedAtStart?: string;
+  updatedAtEnd?: string;
+  createdAtStart?: string;
+  createdAtEnd?: string;
 };
 
 export type EditformType = z.infer<typeof editformSchema>;

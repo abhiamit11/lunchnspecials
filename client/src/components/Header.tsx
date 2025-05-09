@@ -6,7 +6,7 @@ import SearchThisArea from "./SearchThisArea";
 
 function Header() {
     return (
-        <div className="fixed top-0 z-20 w-full px-1 sm:px-4 py-1 bg-white/85">
+        <div className="fixed top-0 z-20 w-full px-1 sm:px-4 py-1 bg-white">
             <div className="container mx-auto flex justify-center items-start">
                 <div className="h-20 w-20 max-sm:hidden mr-2">
                     <img src={LOGO_URL || "/logo.png"} alt="" className="" />

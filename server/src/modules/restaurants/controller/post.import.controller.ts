@@ -30,6 +30,8 @@ type csvObject = {
   menu_category: string;
   menu_timings_opening: string;
   menu_timings_closing: string;
+  business_partner?: string;
+  new_or_revised?: string;
 };
 
 const headersRequired = [
@@ -49,8 +51,8 @@ const headersRequired = [
 
 type importObjectToDb = Omit<restaurantType, "menu"> & {
   _id: ObjectId;
-  creationAt: string;
-  updatedAt: string;
+  creationAt?: string;
+  updatedAt?: string;
   importedAt: string;
   importId: string;
   menu: ObjectId;
@@ -58,6 +60,8 @@ type importObjectToDb = Omit<restaurantType, "menu"> & {
     type: string;
     coordinates: number[];
   };
+  isPartner: boolean;
+  isNewOrRevised: boolean;
 };
 
 type importMenuType = {
@@ -126,12 +130,14 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
               ],
             },
             menu: menu._id,
-            creationAt: timestamp,
-            updatedAt: timestamp,
             importedAt: timestamp,
             importId,
             phone: item.phone,
             rating: item.rating,
+            isPartner: item.business_partner ? true : false,
+            isNewOrRevised: item.new_or_revised ? true : false,
+            creationAt: timestamp,
+            updatedAt: timestamp,
           };
 
           // If the file has a restaurant_id, update the existing record.
@@ -150,7 +156,9 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
               ...objectRestructure,
               _id: restaurantId,
               menu: menu._id,
+              updatedAt: timestamp,
             };
+            delete objectRestructure.creationAt;
           }
           //end
 
@@ -233,9 +241,7 @@ const processedData = async (data: csvObject[]): Promise<resType> => {
 
         resolve(result);
       } catch (error) {
-        console.log("Link 231: bulkWrite error:->", error);
         if (error instanceof MongoBulkWriteError) {
-          console.log("MongoBulkWriteError", error.result);
           const result = error.result;
           await db.collection("import_history").insertOne({
             importId,

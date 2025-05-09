@@ -1,4 +1,4 @@
-import { FormInput, FormTextarea } from "@/components/form"
+import { FormInput, FormSwitch, FormTextarea } from "@/components/form"
 import { FormLabel } from "@/components/ui/form"
 import MenuForm from "./menu/menu-form"
 
@@ -34,6 +34,12 @@ function RestaurantForm() {
                                 <FormInput type="number" name="coordinates.latitude" label="Latitude" placeholder="Latitude" />
                                 <FormInput type="number" name="coordinates.longitude" label="Longitude" placeholder="Longitude" />
                             </div>
+                        </div>
+
+                        <div>
+                            <FormLabel className="text-muted-foreground text-xs">Extra</FormLabel>
+                            <FormSwitch name="isPartner" label="The business is a partner." />
+                            <FormSwitch name="isNewOrRevised" label="The business is New/Revised." />
                         </div>
 
                     </div>

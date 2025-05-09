@@ -35,7 +35,7 @@ app.route(`/api/${versioning}`, router);
 app.doc("/docs", {
   openapi: "3.0.0",
   info: {
-    version: "1.0.0",
+    version: "1.2.1",
     title: "LunchNSpecials API",
   },
 });

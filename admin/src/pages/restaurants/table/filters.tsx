@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { Settings2, UndoDot } from 'lucide-react'
+import { Funnel, FunnelX, X } from 'lucide-react'
 
 import * as React from "react"
-import { addDays, format } from "date-fns"
+import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -23,78 +23,200 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Label } from '@/components/ui/label'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 
 function Filters() {
+    const [creationDate, setCreationDate] = React.useState<DateRange | undefined>(undefined)
+    const [updatedDate, setUpdatedDate] = React.useState<DateRange | undefined>(undefined)
+    const [open, setOpen] = React.useState(false)
+    const navigate = useNavigate({ from: "" })
+    const q = useSearch({ from: "" })
+
+    React.useEffect(() => {
+        if (open) {
+            if (typeof q === 'object') {
+                if (`createdAtStart` in q && `createdAtEnd` in q) {
+                    setCreationDate({
+                        from: q['createdAtStart'],
+                        to: q['createdAtEnd']
+                    })
+                }
+                if (`updatedAtStart` in q && `updatedAtEnd` in q) {
+                    setUpdatedDate({
+                        from: q['updatedAtStart'],
+                        to: q['updatedAtEnd']
+                    })
+                }
+            }
+        }
+
+        return () => {
+            setCreationDate(undefined)
+            setUpdatedDate(undefined)
+        }
+    }, [open])
+
+
+    const onFiltersApply = () => {
+        if (creationDate) {
+            const createdAtStart = creationDate.from;
+            const createdAtEnd = creationDate.to;
+
+            navigate({
+                search: (prev: any) => ({
+                    ...prev,
+                    createdAtStart,
+                    createdAtEnd
+                })
+            })
+        }
+
+        if (updatedDate) {
+            const updatedAtStart = updatedDate.from;
+            const updatedAtEnd = updatedDate.to;
+
+            navigate({
+                search: (prev: any) => ({
+                    ...prev,
+                    updatedAtStart,
+                    updatedAtEnd
+                })
+            })
+        }
+
+        setOpen(false)
+    }
+
+    const onFiltersReset = () => {
+        navigate({
+            search: (obj: any) => {
+                delete obj.createdAtStart;
+                delete obj.createdAtEnd;
+                delete obj.updatedAtStart;
+                delete obj.updatedAtEnd;
+                return ({
+                    ...obj
+                })
+            }
+        })
+        setOpen(false)
+    }
+
+    const onCreationReset = () => {
+        navigate({
+            search: (obj: any) => {
+                delete obj.createdAtStart;
+                delete obj.createdAtEnd;
+                return ({
+                    ...obj
+                })
+            }
+        })
+        setCreationDate(undefined)
+    }
+
+    const onUpdatedReset = () => {
+        navigate({
+            search: (obj: any) => {
+                delete obj.updatedAtStart;
+                delete obj.updatedAtEnd;
+                return ({
+                    ...obj
+                })
+            }
+        })
+        setUpdatedDate(undefined)
+    }
+
+    const onAllFiltersReset = () => {
+        navigate({
+            search: () => null
+        })
+        setUpdatedDate(undefined)
+    }
     return (
-        <Dialog>
-            <DialogTrigger asChild>
+        <>
+            {(JSON.stringify(q) && JSON.stringify(q) != "{}") && <>
                 <Button
                     variant="outline"
-                    size="sm"
+                    size="icon"
                     className="hidden h-8 lg:flex"
+                    onClick={onAllFiltersReset}
                 >
-                    <Settings2 />
-                    Filters
+                    <FunnelX />
                 </Button>
-            </DialogTrigger>
-            <DialogContent className='text-foreground'>
-                <DialogHeader>
-                    <DialogTitle>Filters</DialogTitle>
-                    <DialogDescription>
-                        This action can help you obtain specific data based on your selected criteria.
-                    </DialogDescription>
-                </DialogHeader>
-                <div className='grid grid-cols-1 gap-y-2'>
-                    <div className='grid grid-cols-3 justify-start items-center gap-2'>
-                        <Label>
-                            Creation date :
-                        </Label>
-                        <div className='col-span-2 flex justify-start items-center gap-1'>
-                            <DatePickerWithRange />
-                            <Button variant={'outline'} size={'icon'}><UndoDot /></Button>
+            </>}
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="hidden h-8 lg:flex"
+                    >
+                        <Funnel />
+                        Filters
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className='text-foreground'>
+                    <DialogHeader>
+                        <DialogTitle>Filters</DialogTitle>
+                        <DialogDescription>
+                            This action can help you obtain specific data based on your selected criteria.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className='grid grid-cols-1 gap-y-2'>
+                        <div className='grid grid-cols-3 justify-start items-center gap-2'>
+                            <Label>
+                                Creation date :
+                            </Label>
+                            <div className='col-span-2 flex justify-start items-center gap-2'>
+                                <DatePickerWithRange date={creationDate} setDate={setCreationDate} />
+                                <Button variant={'outline'} size={'icon'} className='w-7 h-7' disabled={creationDate == undefined} onClick={onCreationReset}><X /></Button>
+                            </div>
+                        </div>
+                        <div className='grid grid-cols-3  justify-start items-center gap-2'>
+                            <Label>
+                                Updated date :
+                            </Label>
+                            <div className='col-span-2 flex justify-start items-center gap-2'>
+                                <DatePickerWithRange
+                                    date={updatedDate}
+                                    setDate={setUpdatedDate}
+                                    fromDate={creationDate?.from}
+                                    toDate={creationDate?.to} />
+                                <Button variant={'outline'} size={'icon'} className='w-7 h-7' disabled={updatedDate == undefined} onClick={onUpdatedReset}><X /></Button>
+                            </div>
                         </div>
                     </div>
-                    <div className='grid grid-cols-3  justify-start items-center gap-2'>
-                        <Label>
-                            Updated date :
-                        </Label>
-                        <div className='col-span-2 flex justify-start items-center gap-1'>
-                            <DatePickerWithRange />
-                            <Button variant={'outline'} size={'icon'}><UndoDot /></Button>
+                    <DialogFooter>
+                        <div className='flex gap-2'>
+                            <Button variant={'outline'} onClick={onFiltersReset}>Reset</Button>
+                            <Button onClick={onFiltersApply}>Apply</Button>
                         </div>
-                    </div>
-                </div>
-                <DialogFooter>
-                    <div className='flex gap-2'>
-                        <Button variant={'outline'}>Reset</Button>
-                        <Button>Apply</Button>
-                    </div>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-
-
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }
 
 export default Filters
 
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+    date: DateRange | undefined,
+    setDate: (d: DateRange | undefined) => void
+    fromDate?: Date | undefined
+    toDate?: Date | undefined
+}
+
 export function DatePickerWithRange({
     className,
-}: React.HTMLAttributes<HTMLDivElement>) {
-    const [date, setDate] = React.useState<DateRange | undefined>({
-        from: new Date(2022, 0, 20),
-        to: addDays(new Date(2022, 0, 20), 20),
-    })
-
+    date,
+    setDate,
+    fromDate,
+    toDate
+}: Props) {
     return (
         <div className={cn("grid gap-2", className)}>
             <Popover>
@@ -123,23 +245,6 @@ export function DatePickerWithRange({
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                    <div className='pt-2 px-4'>
-                        <Select
-                            onValueChange={(value) =>
-                                console.log(addDays(new Date(), parseInt(value)))
-                            }
-                        >
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                            <SelectContent position="popper">
-                                <SelectItem value="0">Today</SelectItem>
-                                <SelectItem value="1">Tomorrow</SelectItem>
-                                <SelectItem value="3">In 3 days</SelectItem>
-                                <SelectItem value="7">In a week</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
                     <Calendar
                         initialFocus
                         mode="range"
@@ -147,6 +252,8 @@ export function DatePickerWithRange({
                         selected={date}
                         onSelect={setDate}
                         numberOfMonths={2}
+                        fromDate={fromDate}
+                        toDate={toDate}
                     />
                 </PopoverContent>
             </Popover>

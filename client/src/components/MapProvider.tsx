@@ -1,4 +1,4 @@
-import {
+import React, {
     useRef,
     useEffect,
     useState,
@@ -118,14 +118,16 @@ const MapProvider = ({ children }: { children: ReactNode }) => {
     );
 
     const searchThisArea = useCallback(
-        async (_event: __esri.ViewDragEvent, view: MapView) => {
-            const { latitude, longitude } = view.center;
-            const origin = { longitude: x, latitude: y };
-            const target = { longitude, latitude };
+        async (event: __esri.ViewDragEvent, view: MapView) => {
+            if (event.action === 'end') {
+                const { latitude, longitude } = view.center;
+                const origin = { longitude: x, latitude: y };
+                const target = { longitude, latitude };
 
-            const movedFar = !isWithinRadius(origin, target, 15);
-            toggleButton(movedFar);
-            if (movedFar) setPoints(target);
+                const movedFar = !isWithinRadius(origin, target, 15);
+                toggleButton(movedFar);
+                if (movedFar) setPoints(target);
+            }
         },
         [x, y, toggleButton, setPoints]
     );
@@ -157,4 +159,4 @@ const MapProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-export default MapProvider;
+export default React.memo(MapProvider);

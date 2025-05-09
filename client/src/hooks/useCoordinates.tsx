@@ -7,12 +7,13 @@ function useCoordinates() {
     //     return { x, y }
     // }
 
-    function setCoordinates(x: number, y: number) {
+    function setCoordinates(x: number, y: number, init?: boolean) {
         navigate({
             search: (prev) => ({
                 ...prev,
                 x,
-                y
+                y,
+                init
             })
         })
     }

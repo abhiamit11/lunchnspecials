@@ -1,5 +1,4 @@
 import { RouteHandler } from "@hono/zod-openapi";
-import signin from "../routes/get.analytics";
 import { db } from "../../../services/mongodb";
 import analytics from "../routes/get.analytics";
 import {
@@ -8,7 +7,7 @@ import {
   topViewedRestaurantType,
 } from "../schema/analytics.schema";
 
-const getanalyticsAction: RouteHandler<typeof analytics> = async (c) => {
+const getanalyticsAction: RouteHandler<typeof analytics & any> = async (c) => {
   try {
     const analyticsVisitor = db.collection("analytics_visitor");
     const res = await analyticsVisitor

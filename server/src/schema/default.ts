@@ -23,6 +23,10 @@ export const paginationQuerySchema = z.object({
   sortBy: z.string().optional().default("updatedAt"), // Default sort by 'name'
   sortOrder: z.enum(["asc", "desc"]).optional().default("asc"), // Default sort order is 'asc',
   search: z.string().optional(),
+  createdAtStart: z.string().optional(),
+  createdAtEnd: z.string().optional(),
+  updatedAtStart: z.string().optional(),
+  updatedAtEnd: z.string().optional(),
 });
 
 export const coordinatesQuerySchema = z.object({

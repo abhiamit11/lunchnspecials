@@ -53,7 +53,7 @@ const RestaurantItemForm = ({ index, onOpenChange }: { index: number, onOpenChan
             return true
         } catch (error) {
             if (error instanceof ZodError) {
-                console.log(error)
+                console.error(error)
                 setErrors(error.format() as unknown as ErrorsObject)
             }
         }
@@ -62,7 +62,6 @@ const RestaurantItemForm = ({ index, onOpenChange }: { index: number, onOpenChan
     useEffect(() => {
         if (index > -1) {
             const values: MenuItem = form.getValues(`menu[${index}]`)
-            console.log('values', values)
             if (values) setMenu((old) => ({ ...old, ...values }));
         }
         return () => {
@@ -72,7 +71,6 @@ const RestaurantItemForm = ({ index, onOpenChange }: { index: number, onOpenChan
 
 
     const onAddMenuItem = () => {
-        console.log('menu', menu)
         try {
             if (Resolver()) {
                 form.setValue(`menu[${index}]`, menu)
@@ -207,12 +205,12 @@ const RestaurantItemForm = ({ index, onOpenChange }: { index: number, onOpenChan
                     <div className="grid grid-cols-2 gap-x-4">
                         <div>
                             <Label className={cn(errors && errors['timings'] && "text-destructive")}>Start</Label>
-                            <Input type="time" name="opening" placeholder="Opening" className={cn('mt-2')} onChange={onTimingsChange} value={menu.timings.opening} />
+                            <Input type="time" name="opening" placeholder="Opening" className={cn('mt-2')} onChange={onTimingsChange} value={menu.timings.opening || ""} />
 
                         </div>
                         <div>
                             <Label className={cn(errors && errors['timings'] && "text-destructive")}>Close</Label>
-                            <Input type="time" name="closing" placeholder="Closing" className={cn('mt-2')} onChange={onTimingsChange} value={menu.timings.closing} />
+                            <Input type="time" name="closing" placeholder="Closing" className={cn('mt-2')} onChange={onTimingsChange} value={menu.timings.closing || ""} />
                         </div>
                     </div>
                 </div>

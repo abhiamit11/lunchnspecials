@@ -1,8 +1,5 @@
 import Graphic from "@arcgis/core/Graphic";
 import useMap from '@/hooks/useMap';
-import LunchMarker from "../assets/foods-pin.svg"
-import DrinkMarker from "../assets/drinks-pin.svg"
-import BothMarker from "../assets/food-and-drink.svg"
 import { useQuery } from "@tanstack/react-query";
 import { getRestaurant, getRestaurants, Restaurant } from "../lib/api";
 import { useEffect } from "react";
@@ -13,23 +10,8 @@ import { createRoot } from "react-dom/client";
 import MapPopupTemplate from "./MapPopupTemplate";
 import ReactGA from 'react-ga4';
 import graphicsLayerToMap from "@/lib/graphics-layer";
-import CoffeeMarker from "../assets/coffee-pin.svg"
-
-const markerConfig = {
-    lunch: { url: LunchMarker },
-    drink: { url: DrinkMarker },
-    ct: { url: CoffeeMarker },
-    both: { url: BothMarker }
-};
-
-const getMarkerSymbol = (category: "drink" | "lunch" | "ct" | "both") => {
-    return ({
-        type: "picture-marker",
-        url: markerConfig[category]?.url || markerConfig.lunch.url,
-        width: 42,
-        height: 52
-    })
-};
+import getMarkerSymbol from "./MarkerSymbol";
+import { differenceInWeeks } from "date-fns";
 
 const layerId = 'restaurantsLocationLayer';
 
@@ -39,7 +21,7 @@ function Map() {
     }, []);
 
     const { doseLayerExist, addGraphicsLayer } = useMap();
-    const { x, y, day }: CoordinatesParms & { day: string } = useSearch({ from: "/" });
+    const { x, y, day }: CoordinatesParms & { day: string, init: boolean } = useSearch({ from: "/" });
 
     const { data, isSuccess } = useQuery({
         queryKey: ['restaurants', [x, y, day]],
@@ -49,7 +31,7 @@ function Map() {
     });
 
     const onSetRestaurantPoint = (restaurant: Restaurant) => {
-        const { coordinates: { latitude, longitude }, name, _id, category } = restaurant;
+        const { coordinates: { latitude, longitude }, name, _id, category, isPartner, isNewOrRevised, updatedAt } = restaurant;
         const point: any = {
             type: "point",
             longitude: parseFloat(longitude),
@@ -78,7 +60,12 @@ function Map() {
             ]
         };
 
-        const symbol: any = getMarkerSymbol(category || "lunch");
+        let isNew = false
+        if (isNewOrRevised) {
+            const weekDiff = differenceInWeeks(new Date(), new Date(updatedAt))
+            isNew = weekDiff <= 2
+        }
+        const symbol: any = getMarkerSymbol(category || "lunch", isPartner, isNew);
 
         const pointGraphic = new Graphic({
             geometry: point,

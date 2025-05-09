@@ -6,14 +6,14 @@ const coordinatesSchema = z.object({
 });
 
 const timingsSchema = z.object({
-  opening: z.string(),
-  closing: z.string(),
+  opening: z.string().optional().or(z.null()),
+  closing: z.string().optional().or(z.null()),
 });
 
 export const menuItemSchema = z.object({
   day: z.string().min(1, "Please select day."),
   name: z.string().min(1, "Name is required."),
-  price: z.string().min(1, "Price is required."),
+  price: z.string().optional(),
   description: z.string().optional(),
   category: z.string().min(1, "Please select category.").default("lunch"),
   timings: timingsSchema,
@@ -30,6 +30,8 @@ export const formSchema = z.object({
   phone: z.string().optional(),
   rating: z.string().optional(),
   // timings: timingsSchema,
+  isPartner: z.boolean().optional(),
+  isNewOrRevised: z.boolean().optional(),
 });
 
 export const editformSchema = formSchema.and(z.object({ menuId: z.string() }));
