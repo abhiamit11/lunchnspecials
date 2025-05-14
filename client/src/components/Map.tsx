@@ -63,7 +63,8 @@ function Map() {
         let isNew = false
         if (isNewOrRevised) {
             const weekDiff = differenceInWeeks(new Date(), new Date(updatedAt))
-            isNew = weekDiff <= 2
+            // Check if it's new within the last 4 weeks.
+            isNew = weekDiff <= 4
         }
         const symbol: any = getMarkerSymbol(category || "lunch", isPartner, isNew);
 

@@ -6,7 +6,7 @@ import React, {
     ReactNode,
     useCallback,
 } from 'react';
-import '@arcgis/core/assets/esri/themes/light/main.css';
+import "@arcgis/core/assets/esri/themes/light/main.css";
 import ArcGISMap from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
@@ -51,7 +51,7 @@ const MapProvider = ({ children }: { children: ReactNode }) => {
         if (day && mapView && !isEmpty(mapView.popup)) {
             mapView.popup.close();
         }
-    }, [day, mapView]);
+    }, [day, mapView, coords]);
 
     // Initialize Map
     useEffect(() => {

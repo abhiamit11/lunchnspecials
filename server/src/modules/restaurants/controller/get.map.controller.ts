@@ -68,17 +68,29 @@ const getRestaurantsOnMapAction: RouteHandler<
           $addFields: {
             category: {
               $cond: {
-                if: { $in: ["lunch", "$categories"] },
-                then: "lunch",
+                if: {
+                  $and: [
+                    { $in: ["lunch", "$categories"] },
+                    { $in: ["drink", "$categories"] },
+                    // { $in: ["ct", "$categories"] },
+                  ],
+                },
+                then: "both",
                 else: {
                   $cond: {
-                    if: { $in: ["drink", "$categories"] },
-                    then: "drink",
+                    if: { $in: ["lunch", "$categories"] },
+                    then: "lunch",
                     else: {
                       $cond: {
-                        if: { $in: ["ct", "$categories"] },
-                        then: "ct",
-                        else: "other", // Or any default category you want if none of the above exist
+                        if: { $in: ["drink", "$categories"] },
+                        then: "drink",
+                        else: {
+                          $cond: {
+                            if: { $in: ["ct", "$categories"] },
+                            then: "ct",
+                            else: "none",
+                          },
+                        },
                       },
                     },
                   },

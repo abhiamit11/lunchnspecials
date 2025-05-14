@@ -70,15 +70,33 @@ const getDaySpecialAction: RouteHandler<typeof getDaySpecial> = async (c) => {
           $addFields: {
             category: {
               $cond: {
-                if: { $in: ["lunch", "$categories"] },
-                then: {
+                if: {
+                  $and: [
+                    { $in: ["lunch", "$categories"] },
+                    { $in: ["drink", "$categories"] },
+                    // { $in: ["ct", "$categories"] },
+                  ],
+                },
+                then: "both",
+                else: {
                   $cond: {
-                    if: { $in: ["drink", "$categories"] },
-                    then: "both",
-                    else: "lunch",
+                    if: { $in: ["lunch", "$categories"] },
+                    then: "lunch",
+                    else: {
+                      $cond: {
+                        if: { $in: ["drink", "$categories"] },
+                        then: "drink",
+                        else: {
+                          $cond: {
+                            if: { $in: ["ct", "$categories"] },
+                            then: "ct",
+                            else: "none",
+                          },
+                        },
+                      },
+                    },
                   },
                 },
-                else: "drink",
               },
             },
           },

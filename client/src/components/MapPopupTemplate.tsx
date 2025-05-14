@@ -70,17 +70,17 @@ function MapPopupTemplate({ data, day }: Props) {
                                                 <MenuIcon category={item.category} />
                                             </div>
                                         )}
-                                        <div className="ml-2 font-medium text-gray-900 text-wrap max-w-2xs text-base">
-                                            <p className="truncate text-wrap max-w-2xs">{item.name || item.description}</p>
+                                        <div className="ml-2 font-medium text-gray-900 text-wrap w-[85%] md:max-w-2xs">
+                                            <span className="truncate text-wrap max-w-[85%] md:max-w-2xs text-sm">{item.name || item.description}</span>
                                             {item.name && item.description && (
-                                                <div className="min-w-2xs w-full">
+                                                <div className="w-[85%] sm:min-w-2xs sm:w-full">
                                                     <Accordion type="single" collapsible className="p-0 m-0">
                                                         <AccordionItem value="item-1">
                                                             <AccordionTrigger className="p-0 m-0">
                                                                 <span>Description/Notes</span>
                                                             </AccordionTrigger>
                                                             <AccordionContent>
-                                                                <p className="truncate text-wrap max-w-2xs">{item.description}</p>
+                                                                <span className="truncate text-wrap max-w-2xs text-sm">{item.description}</span>
                                                             </AccordionContent>
                                                         </AccordionItem>
                                                     </Accordion>
